@@ -1,8 +1,12 @@
+import { Box } from '@mui/material'
+import React from 'react'
 
-export default function Layout({ children, home }) {
-    return (
-        <div className="min-h-full p-12">
-            <main>{children}</main>
-        </div>
-    )
+const Layout = ({children}) => {
+  return (
+    <Box bgcolor={'primary.main'}>
+        {children}
+    </Box>
+  )
 }
+
+export default Layout
