@@ -13,8 +13,8 @@ const OtherRadio = (props) => {
     }}
     disableRipple
     color="default"
-    checkedIcon={<BpCheckedIcon />}
-    icon={<BpIcon />}
+    checkedIcon={<BpCheckedIcon/>}
+    icon={<BpIcon/>}
     {...props}
   />
   )

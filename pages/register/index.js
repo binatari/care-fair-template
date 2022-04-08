@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OtherRadio from "../../components/OtherRadio";
 import Label from "../../components/register/Label";
 
@@ -20,7 +20,15 @@ const index = () => {
   const pageStyles = {};
   const handleChange = (event) => {
     setValue(event.target.value);
+    localStorage.setItem("userType", event.target.value)
   };
+
+  useEffect(()=>{
+    const userType = localStorage.getItem('userType')
+    if(userType){
+      setValue(userType)
+    }
+  }, [])
 
   return (
     <Box
@@ -68,8 +76,9 @@ const index = () => {
                 border: value === "organization" && "1px solid",
                 borderColor: value === "organization" && "primary.main",
               }}
+              checked={value === 'organization'} 
               value="organization"
-              control={<OtherRadio />}
+              control={<OtherRadio/>}
               label={
                 <Label
                  padding
@@ -93,7 +102,8 @@ const index = () => {
                 marginInline: "auto",
               }}
               value="individual"
-              control={<OtherRadio />}
+              checked={value === 'individual'} 
+              control={<OtherRadio/>}
               label={
                 <Label
                   padding

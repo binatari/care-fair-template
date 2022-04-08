@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 export default function AlertDialog({ value }) {
  const router = useRouter()
   const [open, setOpen] = React.useState(false);
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = React.useState(false);
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
@@ -29,6 +29,9 @@ export default function AlertDialog({ value }) {
     setOpen(false);
   };
 
+  const handleRoute = () => {
+    router.push('/register/organization')
+  };
 
 
   return (
@@ -128,7 +131,7 @@ export default function AlertDialog({ value }) {
             disableFocusRipple
             disableRipple
             disabled={!checked}
-            onClick={handleClose}
+            onClick={handleRoute}
           >
             Continue
           </Button>

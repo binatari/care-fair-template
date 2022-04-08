@@ -10,10 +10,11 @@ import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/router";
 import { Typography } from "@mui/material";
 
-export default function AlertVerificationDialog({ value }) {
+export default function AlertVerificationDialog({isShown, setIsShown, getCode, disabled, verified }) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [checked, setChecked] = React.useState(true);
@@ -23,41 +24,70 @@ export default function AlertVerificationDialog({ value }) {
   };
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setIsShown(true)
+    getCode()
+    
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setIsShown(false)
   };
 
   return (
     <div>
-      <Button
-        fullWidth
-        onClick={handleClickOpen}
-        sx={{
-          borderRadius: "8px",
-          paddingY: "8px",
-          paddingX: "12px",
-          fontSize: "14px",
-          fontWeight: "600",
-          textTransform: "none",
-          "&.Mui-disabled": {
-            opacity: "0.3",
-            backgroundColor: "primary.main",
-            color: "white",
-          },
-        }}
-        variant="contained"
-        color="primary"
-        disableElevation
-        disableFocusRipple
-        disableRipple
-      >
-        Verify email address
-      </Button>
+      {
+        !verified ? (<Button
+          fullWidth
+          disabled={disabled.length < 6}
+          onClick={handleClickOpen}
+          sx={{
+            borderRadius: "8px",
+            paddingY: "8px",
+            paddingX: "12px",
+            fontSize: "14px",
+            fontWeight: "600",
+            textTransform: "none",
+            "&.Mui-disabled": {
+              opacity: "0.3",
+              backgroundColor: "primary.main",
+              color: "white",
+            },
+          }}
+          variant="contained"
+          color="primary"
+          disableElevation
+          disableFocusRipple
+          disableRipple
+        >
+          Verify email address
+        </Button>):(<Button
+          fullWidth
+          onClick={getCode}
+          sx={{
+            borderRadius: "8px",
+            paddingY: "8px",
+            paddingX: "12px",
+            fontSize: "14px",
+            fontWeight: "600",
+            textTransform: "none",
+            "&.Mui-disabled": {
+              opacity: "0.3",
+              backgroundColor: "primary.main",
+              color: "white",
+            },
+          }}
+          variant="contained"
+          color="primary"
+          disableElevation
+          disableFocusRipple
+          disableRipple
+          endIcon={<ArrowForwardIcon />}
+        >
+         Setup donnee account
+        </Button>)      }
+      
       <Dialog
-        open={open}
+        open={isShown}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"

@@ -39,21 +39,7 @@ const CharityStep = () => {
   };
 
   return (
-    <Box
-      sx={{
-        paddingX: {
-          xs: "2.5em",
-          sm: "3.8em",
-          md: "3.8em",
-        },
-      }}
-      bgcolor={"white"}
-      maxWidth={"28rem"}
-      width={"90%"}
-      pt="2.6em"
-      pb='3.2em'
-      borderRadius={"16px"}
-    >
+    <>
       <Typography variant="big" component={"p"}>
         Please provide details of your charity organisation.
       </Typography>
@@ -336,35 +322,7 @@ const CharityStep = () => {
           </Box>
         </>
       )}
-      {region && (
-        <Box display={"flex"} justifyContent="flex-end">
-          <Button
-            sx={{
-              borderRadius: "8px",
-              paddingY: "8px",
-              paddingX: "12px",
-              mt: "2.5em",
-              fontSize: "14px",
-              fontWeight: "600",
-              textTransform: "none",
-              "&.Mui-disabled": {
-                opacity: "0.3",
-                backgroundColor: "primary.main",
-                color: "white",
-              },
-            }}
-            variant="contained"
-            color="primary"
-            disableElevation
-            disableFocusRipple
-            disableRipple
-            endIcon={<ArrowForwardIcon />}
-          >
-            Next
-          </Button>
-        </Box>
-      )}
-    </Box>
+    </>
   );
 };
 

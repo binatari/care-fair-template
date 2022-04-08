@@ -7,6 +7,27 @@ import { CacheProvider } from '@emotion/react';
 import theme from '../src/theme';
 import '../src/css/Global.css'
 import createEmotionCache from '../src/createEmotionCache';
+import { AuthContextProvider } from '../context/AuthProvider';
+import {
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query'
+
+const queryClientConfig = {
+  defaultOptions: {
+    queries: {
+      retry: 3, 
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      refetchOnMount: true,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false
+    }
+  }
+}
+const queryClient = new QueryClient(queryClientConfig)
+
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -16,6 +37,8 @@ export default function MyApp(props) {
 
   return (
     <CacheProvider value={emotionCache}>
+      <QueryClientProvider client={queryClient}>
+      <AuthContextProvider>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
@@ -24,6 +47,8 @@ export default function MyApp(props) {
         <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>
+     </AuthContextProvider>
+     </QueryClientProvider>
     </CacheProvider>
   );
 }

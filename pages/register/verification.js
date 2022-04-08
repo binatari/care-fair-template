@@ -1,6 +1,15 @@
-import { Box, TextField, Typography, Button } from "@mui/material";
+import { Box, TextField, Typography, Button, Alert, AlertTitle, InputAdornment, IconButton } from "@mui/material";
 import React from "react";
 import AlertVerificationDialog from "../../components/verification/Modal";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import HelperText from "../../components/HelperText";
+import { useState, useEffect } from "react";
+import { onVerify, onLogin } from "../../src/utils/queries";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { useRouter } from "next/router";
 const SVG = (props) => {
   return (
     <>
@@ -20,10 +29,94 @@ const SVG = (props) => {
   );
 };
 const verification = () => {
+  const router = useRouter();
+  const [form, setForm] = useState("");
+  const [otp, setOtp] = useState("12345");
+  const [token, setToken] = useState("");
+  const [retry, setRetry] = useState(0);
+  const [isShown, setIsShown] = useState(false);
+  const [errorStyles, setErrorStyles] = useState(false)
+  console.log(errorStyles)
+
+  const {
+    mutate: verifyMutate,
+    isLoading: verifyLoading,
+    isSuccess: verifySuccess,
+    data: verifyData,
+    error: verifyError,
+  } = onVerify();
+
+  const {
+    mutate: loginMutate,
+    isLoading: loginLoading,
+    isSuccess: loginSuccess,
+    data: loginData,
+  } = onLogin();
+
+  useEffect(() => {
+    const email = localStorage.getItem("email");
+    const password = localStorage.getItem("password");
+    if (email && password) {
+      loginMutate({ email: email, password: password });
+      return;
+    } else {
+      router.push("/");
+      return;
+    }
+  }, [retry]);
+
+  // useEffect(()=>{
+  //     const storedToken = localStorage.getItem('token')
+  //     setToken(storedToken)
+  //     mutate({storedToken, otp})
+  // }, [])
+
+  console.log()
+
+  const handleForm = (e) => {
+    e.preventDefault();
+    setErrorStyles(false)
+    if (form.length >= 6) {
+      setForm(e.target.value.slice(0, 6));
+      return;
+    }
+    setForm(e.target.value);
+  };
+
+  const handleClick = () => {
+    const email = localStorage.getItem("email");
+    const password = localStorage.getItem("password");
+    if (loginSuccess) {
+      let token = loginData.data.data.token;
+      loginMutate({ email: email, password: password });
+      verifyMutate({ token, otp });
+      return;
+    }
+    setRetry(retry + 1);
+  };
+
+  useEffect(() => {
+    if (verifySuccess) {
+      router.push("/register/organization/verification");
+    }
+
+    if (verifyError) {
+      setErrorStyles(true)
+      console.log(verifyError);
+    }
+  }, [verifySuccess, verifyData, verifyError]);
+
+  
   return (
     <Box
       minHeight="100vh"
-      sx={{ display: "flex", justifyContent: "center", alignItems: "center", background: 'linear-gradient(186.82deg, rgba(219, 229, 255, 0.6) -19.71%, rgba(213, 251, 232, 0.48) 102.01%), #FFFFFF;' }}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background:
+          "linear-gradient(186.82deg, rgba(219, 229, 255, 0.6) -19.71%, rgba(213, 251, 232, 0.48) 102.01%), #FFFFFF;",
+      }}
     >
       <Box
         sx={{
@@ -39,16 +132,35 @@ const verification = () => {
         paddingY="3em"
         borderRadius={"16px"}
       >
-        <Typography variant="big" component={"p"}>
-          We have sent a verification message to your email address.
-          <br />
-          <br />
-          Click the link in the message to verify your email or enter the
-          6-digit code we sent you below.
-        </Typography>
+        {(verifySuccess || verifyError) && errorStyles ? (
+          <Alert
+            icon={verifyError && <HighlightOffOutlinedIcon sx={{ color:'secondary.main' }} />}
+            severity={verifySuccess ? "success" : "error"}
+            color={verifySuccess ? "success" : "error"}
+            sx={{ borderRadius: "8px", fontSize: "14px" }}
+          >
+            <AlertTitle sx={{ color:verifySuccess ? 'success.main':'secondary.main' }}>
+              {verifySuccess ? "Email verified" : "Incorrect verification code"}
+            </AlertTitle>
+            {verifySuccess
+              ? "Your email address has been successfully verified. You can now proceed with setting up your donee account."
+              : "We couldn’t verify the code you entered. Check that you have entered the correct digits and try again."}
+          </Alert>
+        ) : (
+          <Typography variant="big" component={"p"}>
+            We have sent a verification message to your email address.
+            <br />
+            <br />
+            Click the link in the message to verify your email or enter the
+            6-digit code we sent you below.
+          </Typography>
+        )}
         <TextField
           placeholder="6-digit verification code"
           id="verify"
+          onChange={handleForm}
+          error={errorStyles}
+          value={form}
           size="small"
           fullWidth
           sx={{
@@ -69,6 +181,19 @@ const verification = () => {
               },
             },
           }}
+          InputProps={{
+            endAdornment: (verifyError && errorStyles) && (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="error button"
+                  edge="end"
+                  color="error"
+                >
+                  <ErrorOutlineIcon color="error.main"/>
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <Button
           sx={{ textTransform: "none" }}
@@ -79,11 +204,21 @@ const verification = () => {
         >
           Resend
         </Button>
-        <Typography variant="small" component={"p"} sx={{marginBottom:'2em'}}>
+        <Typography
+          variant="small"
+          component={"p"}
+          sx={{ marginBottom: "2em" }}
+        >
           Please allow a few minutes for delivery and check the Junk / Spam
           folder of your email inbox before requesting a new code.
         </Typography>
-       <AlertVerificationDialog/>
+        <AlertVerificationDialog
+          disabled={form}
+          isShown={isShown}
+          verified={verifySuccess}
+          setIsShown={setIsShown}
+          getCode={handleClick}
+        />
       </Box>
     </Box>
   );

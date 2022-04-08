@@ -7,17 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CheckIcon from '@mui/icons-material/Check';
 import SentimentDissatisfiedRoundedIcon from "@mui/icons-material/SentimentDissatisfiedRounded";
-import CharityStep from "./register/onboarding/organization/CharityStep";
-import RepresentativeStep from "./register/onboarding/organization/RepresentativeStep";
-
-const steps = [
-  "Charity",
-  "Representative",
-  "Platform",
-  "Payouts",
-  "Review and Submit"
-];
-
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 const SVG = ({active, completed, index}) => {
     return (
       <Box bgcolor={active?'primary.light': completed?'success.light':'grey.border30'} borderRadius='4px' justifyContent={'center'} alignItems={'center'} display='flex' color={active?'white':completed?'success.dark':'grey.light'}>
@@ -26,13 +16,17 @@ const SVG = ({active, completed, index}) => {
     );
   };
 
-export default function HorizontalLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(1);
+export default function HorizontalLinearStepper({activeStep, setActiveStep, userType, setUserType, stepped}) {
   const [skipped, setSkipped] = React.useState(new Set());
-
+  
   const isStepOptional = (step) => {
     return step === 1;
   };
+
+
+  React.useEffect(()=>{
+    console.log(stepped)
+  }, [stepped])
 
   const isStepSkipped = (step) => {
     return skipped.has(step);
@@ -53,20 +47,6 @@ export default function HorizontalLinearStepper() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
 
   const handleReset = () => {
     setActiveStep(0);
@@ -75,7 +55,7 @@ export default function HorizontalLinearStepper() {
   return (
     <Box sx={{ width: "100%", display:'flex', alignItems:'center', flexDirection:'column' }}>
       <Stepper activeStep={activeStep} sx={{justifyContent:'center', marginBottom:"1.5em"}}>
-        {steps.map((label, index) => {
+        {stepped.map((label, index) => {
           const stepProps = {};
           const labelProps = {};
           //code for optional steps
@@ -93,7 +73,7 @@ export default function HorizontalLinearStepper() {
           }
           return (
             <Step
-              key={label}
+              key={index}
               {...stepProps}
               sx={{
                 "& .MuiStepLabel-label ": {
@@ -125,16 +105,61 @@ export default function HorizontalLinearStepper() {
                 icon={<SVG active={index === activeStep} completed={stepProps.completed} index={index}/>}
                 {...labelProps}
               >
-                {label}
+                {userType === 'individual'? label.individualLabel : label.organizationLabel}
               </StepLabel>
             </Step>
           );
         })}
       </Stepper>
+      <Box
+      sx={{
+        paddingX:{
+          xs:'2.5em',
+          sm:"4em",
+          md:'4em'
+        }
+      }}
+        bgcolor={"white"}
+        maxWidth={"28rem"}
+        width={"90%"}
+       
+        paddingY="2em"
+        borderRadius={"16px"}
+      >
       {
-          activeStep === 0?(<CharityStep/>):(<RepresentativeStep/>)
-          
+        stepped.map((teststep, i)=> activeStep === i && (
+          teststep.component
+        ))
       }
+         <Box display={"flex"} justifyContent="flex-end">
+          <Button
+            sx={{
+              borderRadius: "8px",
+              paddingY: "8px",
+              paddingX: "12px",
+              mt: "2.5em",
+              fontSize: "14px",
+              fontWeight: "600",
+              textTransform: "none",
+              "&.Mui-disabled": {
+                opacity: "0.3",
+                backgroundColor: "primary.main",
+                color: "white",
+              },
+            }}
+            onClick={handleNext}
+            variant="contained"
+            color="primary"
+            disableElevation
+            disableFocusRipple
+            disableRipple
+            endIcon={<ArrowForwardIcon />}
+          >
+            Next
+          </Button>
+        </Box>
+      </Box>
+
       
     </Box>
   );
