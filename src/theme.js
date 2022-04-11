@@ -17,6 +17,36 @@ const theme = createTheme({
       fontSize: '12px',
       lineHeight: '18px',
     },
+     h1: {
+    fontWeight: 500,
+    fontSize: "1.875rem",
+    lineHeight: "1.5",
+  },
+  h2: {
+    fontWeight: 500,
+    fontSize: "1.5rem",
+    lineHeight: "1.5",
+  },
+  h3: {
+    fontWeight: 500,
+    fontSize: "1.3125rem",
+    lineHeight: "1.5",
+  },
+  h4: {
+    fontWeight: 500,
+    fontSize: "1.125rem",
+    lineHeight: "1.5",
+  },
+  h5: {
+    fontWeight: 500,
+    fontSize: "1rem",
+    lineHeight: "1.5",
+  },
+  h6: {
+    fontWeight: 500,
+    fontSize: "0.875rem",
+    lineHeight: "1.5",
+  },
     fontFamily: 'Inter, sans-serif; ',
     fontSize:14,
     lineHeight: 20,

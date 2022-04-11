@@ -1,10 +1,6 @@
 import { Box, TextField, Typography, Button, Alert, AlertTitle, InputAdornment, IconButton } from "@mui/material";
 import React from "react";
 import AlertVerificationDialog from "../../components/verification/Modal";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import HelperText from "../../components/HelperText";
 import { useState, useEffect } from "react";
 import { onVerify, onLogin } from "../../src/utils/queries";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
@@ -89,15 +85,20 @@ const verification = () => {
     if (loginSuccess) {
       let token = loginData.data.data.token;
       loginMutate({ email: email, password: password });
-      verifyMutate({ token, otp });
+      verifyMutate({ token, form });
       return;
     }
     setRetry(retry + 1);
   };
 
   useEffect(() => {
+    
+
     if (verifySuccess) {
-      router.push("/register/organization/verification");
+      setTimeout(()=>{
+       router.push("/register/organization/verification");
+      },2000)
+     
     }
 
     if (verifyError) {
@@ -108,16 +109,10 @@ const verification = () => {
 
   
   return (
-    <Box
-      minHeight="100vh"
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background:
-          "linear-gradient(186.82deg, rgba(219, 229, 255, 0.6) -19.71%, rgba(213, 251, 232, 0.48) 102.01%), #FFFFFF;",
-      }}
-    >
+    <>
+     <Typography component={'h2'} variant="h2" textAlign={'center'} fontWeight={600} marginBottom='2em'>
+      Verify your email address
+      </Typography>
       <Box
         sx={{
           paddingX: {
@@ -132,21 +127,23 @@ const verification = () => {
         paddingY="3em"
         borderRadius={"16px"}
       >
-        {(verifySuccess || verifyError) && errorStyles ? (
-          <Alert
-            icon={verifyError && <HighlightOffOutlinedIcon sx={{ color:'secondary.main' }} />}
-            severity={verifySuccess ? "success" : "error"}
-            color={verifySuccess ? "success" : "error"}
-            sx={{ borderRadius: "8px", fontSize: "14px" }}
+        {!verifySuccess ? (
+             <>
+          {(verifyError && errorStyles) && (
+            <>
+             <Alert
+            icon={ <HighlightOffOutlinedIcon sx={{ color:'secondary.main' }} />}
+            severity={ "error"}
+            color={"error" }
+            sx={{ borderRadius: "8px", fontSize: "14px", mb:'1em' }}
           >
-            <AlertTitle sx={{ color:verifySuccess ? 'success.main':'secondary.main' }}>
-              {verifySuccess ? "Email verified" : "Incorrect verification code"}
+            <AlertTitle sx={{color:'secondary.main' }}>
+              Incorrect verification code
             </AlertTitle>
-            {verifySuccess
-              ? "Your email address has been successfully verified. You can now proceed with setting up your donee account."
-              : "We couldn’t verify the code you entered. Check that you have entered the correct digits and try again."}
+              "We couldn’t verify the code you entered. Check that you have entered the correct digits and try again."
           </Alert>
-        ) : (
+            </>
+          )}
           <Typography variant="big" component={"p"}>
             We have sent a verification message to your email address.
             <br />
@@ -154,7 +151,6 @@ const verification = () => {
             Click the link in the message to verify your email or enter the
             6-digit code we sent you below.
           </Typography>
-        )}
         <TextField
           placeholder="6-digit verification code"
           id="verify"
@@ -212,6 +208,22 @@ const verification = () => {
           Please allow a few minutes for delivery and check the Junk / Spam
           folder of your email inbox before requesting a new code.
         </Typography>
+        </>
+        ):(
+          <>
+          <Alert
+            icon={ <HighlightOffOutlinedIcon sx={{ color:'success.main' }} />}
+            severity={ "success"}
+            color={"success" }
+            sx={{ borderRadius: "8px", fontSize: "14px" }}
+          >
+            <AlertTitle sx={{color:'success.main' }}>
+            Email verified
+            </AlertTitle>
+            Your email address has been successfully verified. You can now proceed with setting up your donee account.
+          </Alert>
+          </>  )
+        }
         <AlertVerificationDialog
           disabled={form}
           isShown={isShown}
@@ -220,7 +232,7 @@ const verification = () => {
           getCode={handleClick}
         />
       </Box>
-    </Box>
+    </>
   );
 };
 

@@ -1,15 +1,16 @@
 import { TextField } from '@mui/material'
-import { Controller } from "react-hook-form";
 import React from 'react'
+import { useForm, Controller } from "react-hook-form";
+import HelperText from './HelperText';
 
-
-const CustomInput = ({setState, id, control }) => {
+const CustomInput = ({setState, id, control, error}) => {
     const handleChange = (event) => {
         setState(event.target.value);
       };
     
   return (
-    <Controller
+    <>
+      <Controller
             name={id}
             control={control}
             render={({ field: { onChange, value, } }) => (
@@ -17,9 +18,11 @@ const CustomInput = ({setState, id, control }) => {
         id={id}
         margin="none"
         size="small"
+        error={error}
+        helperText={error && <HelperText text={error.message} />}
         onChange={onChange}
-        value={value}
         fullWidth
+        value={value}
         sx={{
           border: "none",
           borderColor: "",
@@ -46,6 +49,7 @@ const CustomInput = ({setState, id, control }) => {
       />
       )}
       />
+    </>
   )
 }
 

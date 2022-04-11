@@ -25,12 +25,15 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import HelperText from "../../../components/HelperText";
+import { onLogin, onRegister } from "../../../src/utils/queries";
+import { useLoginProvider } from "../../../context/LoginProvider";
+import { useRouter } from "next/router";
 
 const schema = yup.object({
   email: yup.string().email().required(),
   passwordText1: yup.string()
   .required('Password is mandatory')
-  .min(3, 'Password must be at least 3 char long'),
+  .min(8, 'Password must be at least 8 char long'),
   passwordText2: yup.string()
   .required('Confirm Password is required')
   .oneOf([yup.ref('passwordText1')], 'Passwords must and should match'),
@@ -50,13 +53,39 @@ const Text = (props) => {
 };
 
 const index = () => {
+  const router = useRouter()
   const [showPassword, setShowPassword] = React.useState({
     password1: false,
     password2: false,
   });
 
-  //DESTRUCTURE CUSTOM CONTEXT HOOK
-  const { password, setAuthContext } = useAuthProvider();
+  const {
+    mutate: RegisterMutate,
+    isLoading: registerLoading,
+    isSuccess: registerSuccess,
+    error,
+    isError,
+    data: registerData,
+  } = onRegister();
+
+
+  const {setLoginContext} = useLoginProvider()
+
+  React.useEffect(()=>{
+    if(registerSuccess){
+      setLoginContext({token:registerData.data.data.token})
+      router.push('/register/verification')
+    }
+    if(isError){
+      console.log(error.message)
+    }
+
+
+  }, [registerSuccess, isError])
+
+ 
+
+  
 
   const { control, handleSubmit, formState: { errors, isValid }, } = useForm({
     defaultValues: {
@@ -68,11 +97,13 @@ const index = () => {
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
-
-  const onSubmit = (data) => {
-    localStorage.setItem('email', data.email)
-    localStorage.setItem('password', data.passwordText1)
-    console.log(data);
+console.log(registerData)
+  const onSubmit = ({passwordText1, email}) => {
+    const user = localStorage.getItem('userType')
+    localStorage.setItem('email', email)
+    localStorage.setItem('password', passwordText1)
+    console.log(passwordText1, email, user);
+    RegisterMutate({ email: email, password: passwordText1, type:user });
   };
 
   const handleMouseDownPassword = (event) => {
@@ -80,16 +111,10 @@ const index = () => {
   };
 
   return (
-    <Box
-      minHeight="100vh"
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background:
-          "linear-gradient(186.82deg, rgba(219, 229, 255, 0.6) -19.71%, rgba(213, 251, 232, 0.48) 102.01%), #FFFFFF;",
-      }}
-    >
+    <>
+     <Typography component={'h2'} variant="h2" textAlign={'center'} fontWeight={600} marginBottom='2em'>
+       Create a user account
+      </Typography>
       <Box
         sx={{
           paddingX: {
@@ -331,7 +356,7 @@ const index = () => {
           </Button>
         </form>
       </Box>
-    </Box>
+    </>
   );
 };
 

@@ -1,9 +1,11 @@
 import React from "react";
 import { Button, TextField } from "@mui/material";
 const Upload = () => {
+  const [fileName, setFileName] = React.useState('')
   const onFileChange = (e) => {
     e.preventDefault();
     console.log(e.target.files[0]);
+    setFileName(e.target.files[0].name)
   };
   const UploadButton = (props) => {
     return (
@@ -11,6 +13,7 @@ const Upload = () => {
         <label htmlFor="upload-photo">
           <input
             style={{ display: "none" }}
+             
             id="upload-photo"
             name="upload-photo"
             type="file"
@@ -47,6 +50,7 @@ const Upload = () => {
         size="small"
         fullWidth
         disabled
+        value={fileName}
         sx={{
           mt: "0.5em",
           '& .MuiOutlinedInput-root.Mui-disabled':{

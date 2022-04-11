@@ -7,12 +7,14 @@ import { CacheProvider } from '@emotion/react';
 import theme from '../src/theme';
 import '../src/css/Global.css'
 import createEmotionCache from '../src/createEmotionCache';
-import { AuthContextProvider } from '../context/AuthProvider';
+
 import {
   useQueryClient,
   QueryClient,
   QueryClientProvider,
 } from 'react-query'
+import AuthLayout from '../components/layouts/AuthLayout';
+import { LoginContextProvider } from '../context/LoginProvider';
 
 const queryClientConfig = {
   defaultOptions: {
@@ -38,16 +40,24 @@ export default function MyApp(props) {
   return (
     <CacheProvider value={emotionCache}>
       <QueryClientProvider client={queryClient}>
-      <AuthContextProvider>
+     <LoginContextProvider>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
+        { Component.PageLayout ? 
+        <Component.PageLayout>
+          <Component {...pageProps} />
+        </Component.PageLayout>
+        :
+        <AuthLayout>
         <Component {...pageProps} />
+        </AuthLayout>
+        }
       </ThemeProvider>
-     </AuthContextProvider>
+      </LoginContextProvider>
      </QueryClientProvider>
     </CacheProvider>
   );

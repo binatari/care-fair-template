@@ -19,34 +19,19 @@ const SVG = ({active, completed, index}) => {
 export default function HorizontalLinearStepper({activeStep, setActiveStep, userType, setUserType, stepped}) {
   const [skipped, setSkipped] = React.useState(new Set());
   
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
 
 
   React.useEffect(()=>{
     console.log(stepped)
   }, [stepped])
 
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
-
   const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-
 
   const handleReset = () => {
     setActiveStep(0);
@@ -67,9 +52,6 @@ export default function HorizontalLinearStepper({activeStep, setActiveStep, user
 
           if (index < activeStep){
               stepProps.completed = true
-          }
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
           }
           return (
             <Step
@@ -131,33 +113,7 @@ export default function HorizontalLinearStepper({activeStep, setActiveStep, user
           teststep.component
         ))
       }
-         <Box display={"flex"} justifyContent="flex-end">
-          <Button
-            sx={{
-              borderRadius: "8px",
-              paddingY: "8px",
-              paddingX: "12px",
-              mt: "2.5em",
-              fontSize: "14px",
-              fontWeight: "600",
-              textTransform: "none",
-              "&.Mui-disabled": {
-                opacity: "0.3",
-                backgroundColor: "primary.main",
-                color: "white",
-              },
-            }}
-            onClick={handleNext}
-            variant="contained"
-            color="primary"
-            disableElevation
-            disableFocusRipple
-            disableRipple
-            endIcon={<ArrowForwardIcon />}
-          >
-            Next
-          </Button>
-        </Box>
+        
       </Box>
 
       

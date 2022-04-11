@@ -31,11 +31,7 @@ const index = () => {
   }, [])
 
   return (
-    <Box
-      minHeight="100vh"
-      bgcolor={"primary.light"}
-      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-    >
+    <>
       <Box
       sx={{
         paddingX:{
@@ -118,7 +114,7 @@ const index = () => {
         </FormControl>
         <AlertDialog value={value}/>
       </Box>
-    </Box>
+    </>
   );
 };
 

@@ -26,14 +26,12 @@ import * as yup from "yup";
 import HelperText from "../../../HelperText";
 
 const schema = yup.object({
-  email: yup.string().email().required(),
-  passwordText1: yup.string()
+  first_name: yup.string().email().required(),
+  last_name: yup.string()
   .required('Password is mandatory')
   .min(3, 'Password must be at least 3 char long'),
-  passwordText2: yup.string()
-  .required('Confirm Password is required')
-  .oneOf([yup.ref('passwordText1')], 'Passwords must and should match'),
-  checkbox: yup.boolean().required().oneOf([true], 'Field must be checked')
+  date_of_birth: yup.string().required('Confirm Password is required'),
+  email: yup.boolean().required().oneOf([true], 'Field must be checked')
 }).required();
 
 

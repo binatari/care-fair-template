@@ -8,6 +8,9 @@ import Typography from "@mui/material/Typography";
 import CheckIcon from '@mui/icons-material/Check';
 import CharityStep from "../../../components/register/onboarding/organization/CharityStep";
 import RepresentativeStep from "../../../components/register/onboarding/organization/RepresentativeStep";
+import PlatformStep from "../../../components/register/onboarding/organization/PlatformStep";
+import PayoutStep from "../../../components/register/onboarding/organization/PayoutStep";
+import { AuthContextProvider } from '../../../context/AuthProvider';
 
 
 const onboarding = () => {
@@ -22,21 +25,27 @@ const onboarding = () => {
     {
       role:'organization',
       individualLabel:'',
-      organizationLabel:'',
+      organizationLabel:'Charity',
       component: <CharityStep/>,
     },
     {
       role:'shared',
-      individualLabel:'',
-      organizationLabel:'',
+      individualLabel:'Your details',
+      organizationLabel:'Representative',
       component: <RepresentativeStep/>,
+    },
+    {
+      role:'organization',
+      individualLabel:'',
+      organizationLabel:'Platform',
+      component: <PlatformStep/>,
     },
     // put two more organization steps here
     {
       role:'shared',
       individualLabel:'Payouts',
       organizationLabel:'Payouts',
-      component: <Button>goal</Button>,
+      component: <PayoutStep/>,
     },
     {
       role:'shared',
@@ -68,22 +77,17 @@ const onboarding = () => {
   }, [])
 
   return (
-    <Box
-      minHeight="100vh"
-      py={'5em'}
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-        background: 'linear-gradient(186.82deg, rgba(219, 229, 255, 0.6) -19.71%, rgba(213, 251, 232, 0.48) 102.01%), #FFFFFF;'
-      }}
-    >
-      <Box width={"90%"}>
+    <>
+      <Box width={"90%"} mx={'auto'} sx={{display:'flex', justifyContent:'center', flexDirection:'column'}}>
+      <Typography component={'h2'} variant="h2" textAlign={'center'} fontWeight={600} marginBottom='2em'>
+        Setup your donee account
+      </Typography>
+      <AuthContextProvider>
         <HorizontalLinearStepper activeStep={activeStep} setActiveStep={setActiveStep} userType={userType} setUserType={setUserType} stepped={steps}/>
+        </AuthContextProvider>
       </Box>
         {/* <CharityStep/> */}
-    </Box>
+    </>
   );
 };
 

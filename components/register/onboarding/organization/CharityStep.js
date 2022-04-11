@@ -14,29 +14,82 @@ import {
   Grid,
   TextareaAutosize,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import OtherRadio from "../../../OtherRadio";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Label from "../../Label";
 import CustomInput from "../../../CustomInput";
 import Upload from "../../../Upload";
+import { useAuthProvider } from "../../../../context/AuthProvider";
+import { useForm, Controller } from "react-hook-form";
+import { onLogin } from "../../../../src/utils/queries";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
+import LinedBox from "../../../LinedBox";
+
+
+const schema = yup.object({
+  name: yup.string().required('please input something'),
+  state:yup.string().required('please input something'),
+  is_subsidiary: yup.string().required('please input something'),
+  city:yup.string().required('please input something'),
+  subsidiary_number: yup.string().optional(),
+  registration_number:yup.string().required('please input something'),
+  description_of_service:yup.string().optional(),
+  address_line_1:yup.string().required('please input something'),
+  phone_number:yup.string().required('please input something'),
+  address_line_2:yup.string().required('please input something'),
+  website:yup.string().optional(),
+  postal_code:yup.string().required('please input something'),
+  // country_id:yup.string().required('please input something'),
+  hmrc_reference_number:yup.string().optional(),
+  email:yup.string().email().required('please input something')
+}).required();
 
 const CharityStep = () => {
-  const [country, setCountry] = React.useState("United Kingdom");
-  const [region, setRegion] = React.useState("");
-  const [value, setValue] = React.useState("");
-  const [description, setDescription] = React.useState("");
+  const [value, setValue] = useState()
   const handleChange = (event) => {
     setAge(event.target.value);
   };
 
-  const handleChecked = (event) => {
-    setValue(event.target.value);
-  };
+  const {setAuthContext, region}= useAuthProvider()
 
-  const handleRegionChange = (event) => {
-    setRegion(event.target.value);
-  };
+  const { control, handleSubmit, formState: { errors, isValid }, watch} = useForm({
+    defaultValues: {
+      state:'',
+      name: "",
+      city:"",
+      is_subsidiary: null,
+      subsidiary_number: "",
+      description_of_service: "",
+      registration_number:'',
+      address_line_1:'',
+      phone_number:'',
+      address_line_2:'',
+      website:'',
+      postal_code:'',
+      country_id:'',
+      hmrc_reference_number:'',
+      email:''
+    },
+    resolver: yupResolver(schema),
+    mode: 'onChange',
+  });
+
+  const watchingState = watch('state')
+  const is_subsidiary = watch('is_subsidiary')
+
+
+const onSubmit = (data) =>{
+  let sendData;
+  if(data.is_subsidiary === 'yes'){
+    sendData = {...data, is_subsidiary:true}
+  }else{
+    sendData = {...data, is_subsidiary:false}
+  }
+  setAuthContext({...sendData})
+}
+
 
   return (
     <>
@@ -58,6 +111,7 @@ const CharityStep = () => {
         <br />
         <Link mt="0.5em">Learn more</Link>
       </Alert>
+      <form onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="big" component={"p"} fontWeight={500}>
         Location
       </Typography>
@@ -65,9 +119,8 @@ const CharityStep = () => {
         Where is your charity registered?
       </Typography>
       <TextField
-        id="outlined-select-currency"
         select
-        value={country}
+        value={"United Kingdom"}
         disabled
         margin="none"
         size="small"
@@ -90,7 +143,7 @@ const CharityStep = () => {
           },
         }}
       >
-        <MenuItem value={country}>{country}</MenuItem>
+        <MenuItem value={"United Kingdom"}>{"United Kingdom"}</MenuItem>
       </TextField>
       <Typography variant="small" component={"p"} mb="0.75em">
         iDonatio is currently only available in the United Kingdom. We are
@@ -125,11 +178,15 @@ const CharityStep = () => {
           },
         }}
       >
+         <Controller
+            name="state"
+            control={control}
+            render={({ field: { onChange, value, } }) => (
         <Select
           variant="outlined"
-          onChange={handleRegionChange}
+          onChange={onChange}
           size="small"
-          value={region}
+          value={value}
           renderValue={(selected) => {
             if (selected.length === 0) {
               return (
@@ -154,9 +211,12 @@ const CharityStep = () => {
             Scotland
           </MenuItem>
         </Select>
+        )}
+        />
       </FormControl>
-      {region && (
-        <>
+      
+      {watchingState && (
+          <>
           <Typography
             variant="big"
             component={"p"}
@@ -166,7 +226,7 @@ const CharityStep = () => {
           >
             Charity name
           </Typography>
-          <CustomInput id={"charity"} setState={setValue} />
+          <CustomInput id={"name"} setState={setValue} control={control} error={errors.name} />
           <Typography
             variant="big"
             component={"p"}
@@ -176,7 +236,7 @@ const CharityStep = () => {
           >
             Charity registration number
           </Typography>
-          <CustomInput id={"registration-number"} setState={setValue} />
+          <CustomInput id={"registration_number"} setState={setValue} control={control} error={errors.registration_number} />
           <Typography
             variant="big"
             component={"p"}
@@ -191,23 +251,78 @@ const CharityStep = () => {
             organisation?
           </Typography>
           <FormControl sx={{ marginBottom: "2em" }}>
+          <Controller
+            name="is_subsidiary"
+            control={control}
+            render={({ field: { onChange, value, } }) => (
             <RadioGroup
-              name="radio-buttons-group"
-              onChange={handleChecked}
+              onChange={onChange}
+              value={value}
               sx={{ display: "flex", flexDirection: "row" }}
             >
               <FormControlLabel
-                value="Yes"
+                value={'yes'}
                 control={<OtherRadio />}
                 label={<Label head={"Yes"} />}
               />
               <FormControlLabel
-                value="No"
+                value={'no'}
                 control={<OtherRadio />}
                 label={<Label head={"No"} />}
               />
             </RadioGroup>
+                )}
+                />
           </FormControl>
+          <LinedBox>
+          {
+             watchingState !== 'Scotland' && is_subsidiary === 'yes' ? ( <>
+              <Typography
+                variant="big"
+                component={"p"}
+                fontWeight={500}
+                marginTop="9px"
+                color="grey.dark"
+              >
+                Subsidiary number
+              </Typography>
+              <CustomInput id={"subsidiary_number"} setState={setValue} control={control} error={errors.subsidiary_number} />
+              </> ) :watchingState === 'Scotland' && is_subsidiary === 'yes' ?  (
+                <>
+                <Typography
+                  variant="big"
+                  component={"p"}
+                  fontWeight={500}
+                  marginTop="9px"
+                  color="grey.dark"
+                >
+                 Parent charity name
+                </Typography>
+                <CustomInput id={"parent_charity_name"} setState={setValue} control={control}  />
+                <Typography
+                  variant="big"
+                  component={"p"}
+                  fontWeight={500}
+                  marginTop="9px"
+                  color="grey.dark"
+                >
+                  Parent charity number
+                </Typography>
+                <CustomInput id={"parent_charity_number"} setState={setValue} control={control} />
+                <Typography
+                  variant="big"
+                  component={"p"}
+                  fontWeight={500}
+                  marginTop="9px"
+                  color="grey.dark"
+                >
+                  Parent charity country of registration
+                </Typography>
+                <CustomInput id={"parent_charity_country"} setState={setValue} control={control} />
+                </>
+              ):null
+          }
+          </LinedBox>
           <Typography
             variant="big"
             component={"p"}
@@ -221,14 +336,14 @@ const CharityStep = () => {
             If your charity is a subsidiary charity, this must be the registered
             address of your parent organisation.
           </Typography>
-          <CustomInput id={"address1"} setState={setValue} />
-          <CustomInput id={"address2"} setState={setValue} />
+          <CustomInput id={"address_line_1"} setState={setValue} control={control} error={errors.address_line_1} />
+          <CustomInput id={"address_line_2"} setState={setValue} control={control} error={errors.address_line_2} />
           <Grid container spacing={2} mb={"2em"}>
             <Grid item xs={12} md={6}>
-              <CustomInput id={"postal code"} setState={setValue} />
+              <CustomInput id={"city"} setState={setValue} control={control} error={errors.city}/>
             </Grid>
             <Grid item xs={12} md={6}>
-              <CustomInput id={"address1"} setState={setValue} />
+              <CustomInput id={"postal_code"} setState={setValue} control={control} error={errors.postal_code} />
             </Grid>
           </Grid>
           <Box>
@@ -245,7 +360,7 @@ const CharityStep = () => {
             Your charity’s HMRC reference number is required only if you wish to
             enable GiftAid features on your account.
           </Typography>
-          <CustomInput id={"address1"} setState={setValue} />
+          <CustomInput id={"hmrc_reference_number"} setState={setValue} control={control} error={errors.hmrc_reference_number}/>
           <Box mt="2em">
             <Typography
               variant="big"
@@ -255,7 +370,7 @@ const CharityStep = () => {
             >
               Business phone number
             </Typography>
-            <CustomInput id={"businessNumber"} setState={setValue} />
+            <CustomInput id={"phone_number"} setState={setValue} control={control} error={errors.phone_number}/>
           </Box>
           <Box mt="2em">
             <Typography
@@ -270,7 +385,7 @@ const CharityStep = () => {
               All correspondence from iDonatio will be sent to this email
               address.
             </Typography>
-            <CustomInput id={"businessEmail"} setState={setValue} />
+            <CustomInput id={"email"} setState={setValue} control={control} error={errors.email}/>
           </Box>
           <Box mt="2em">
             <Typography
@@ -281,7 +396,7 @@ const CharityStep = () => {
             >
               Website
             </Typography>
-            <CustomInput id={"website"} setState={setValue} />
+            <CustomInput id={"website"} setState={setValue} control={control} error={errors.website}/>
           </Box>
           <Box mt="2em">
             <Typography
@@ -295,12 +410,19 @@ const CharityStep = () => {
             <Typography variant="small" component={"p"}>
               As on your charity organisation
             </Typography>
+            <Controller
+            name="description_of_service"
+            control={control}
+            render={({ field: { onChange, value, } }) => (
             <TextareaAutosize
               aria-label="description"
+              onChange={onChange}
               minRows={4}
-              value={description}
+              value={value}
               placeholder="Description"
               style={{ width: "100%", border: "1px solid #E4E7EB" }}
+            />
+            )}
             />
           </Box>
           <Box mt="2em">
@@ -318,10 +440,17 @@ const CharityStep = () => {
               Upload a clear .jpg, .png or .pdf scan of your proof of entity
               document. (Maximum file size is 5MB.)
             </Typography>
-            <Upload />
+            {/* <Upload control={control}/> */}
+            <Button>
+
+            </Button>
           </Box>
+          <Button type="submit" disabled={!isValid}>
+         submit
+        </Button>
         </>
       )}
+    </form>
     </>
   );
 };
