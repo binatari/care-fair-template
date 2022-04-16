@@ -18,13 +18,17 @@
     "@hookform/resolvers": "^2.8.8",
     "@mui/icons-material": "^5.5.1",
     "@mui/material": "latest",
+    "@mui/x-date-pickers": "^5.0.0-alpha.1",
     "axios": "^0.26.1",
+    "moment": "^2.29.2",
     "next": "latest",
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
     "react-hook-form": "^7.29.0",
     "react-query": "^3.34.19",
+    "react-table": "^7.7.0",
+    "swiper": "^8.1.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {

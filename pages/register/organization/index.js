@@ -71,6 +71,7 @@ const index = () => {
 
   const {setLoginContext} = useLoginProvider()
 
+  const all = useLoginProvider()
   React.useEffect(()=>{
     if(registerSuccess){
       setLoginContext({token:registerData.data.data.token})

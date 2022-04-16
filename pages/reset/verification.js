@@ -2,7 +2,7 @@ import { Box, TextField, Typography, Button, Alert, AlertTitle, InputAdornment, 
 import React from "react";
 import AlertVerificationDialog from "../../components/verification/Modal";
 import { useState, useEffect } from "react";
-import { onVerify, onLogin } from "../../src/utils/queries";
+import { onVerify, onLogin, validateOtp, requestOtp } from "../../src/utils/queries";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useRouter } from "next/router";
@@ -28,39 +28,45 @@ const SVG = (props) => {
 const verification = () => {
   const router = useRouter();
   const [form, setForm] = useState("");
-  const [retry, setRetry] = useState(0);
   const [isShown, setIsShown] = useState(false);
+  const [sendOtp, setSendOtp] = useState(false);
   const [errorStyles, setErrorStyles] = useState(false)
   console.log(errorStyles)
-  const {setLoginContext, token} = useLoginProvider()
-  const {
-    mutate: verifyMutate,
-    isLoading: verifyLoading,
-    isSuccess: verifySuccess,
-    data: verifyData,
-    error: verifyError,
-  } = onVerify();
+  const {setLoginContext, token, email, } = useLoginProvider()
 
   const {
-    mutate: loginMutate,
-    isLoading: loginLoading,
-    isSuccess: loginSuccess,
-    data: loginData,
-  } = onLogin();
+    mutate,
+    isLoading,
+    isSuccess,
+    isError,
+    data,
+    error,
+  } = validateOtp();
+
+
+  const {
+    mutate:requestMutate,
+    isLoading:requestLoading,
+    isSuccess:requestIsSuccess,
+    isError:requestIsError,
+    data:requestData,
+    error:requestError,
+  } = requestOtp();
+
 
   
-  useEffect(() => {
+//   useEffect(() => {
 
-    const email = localStorage.getItem("email");
-    const password = localStorage.getItem("password");
-    if (email && password) {
-      loginMutate({ email: email, password: password });
-      return;
-    } else {
-      router.push("/");
-      return;
-    }
-  }, [retry]);
+//     const email = localStorage.getItem("email");
+//     const password = localStorage.getItem("password");
+//     if (email && password) {
+//       loginMutate({ email: email, password: password });
+//       return;
+//     } else {
+//       router.push("/");
+//       return;
+//     }
+//   }, [retry]);
 
   // useEffect(()=>{
   //     const storedToken = localStorage.getItem('token')
@@ -80,46 +86,40 @@ const verification = () => {
     setForm(e.target.value);
   };
 
-  const handleClick = () => {
-    const email = localStorage.getItem("email");
-    const password = localStorage.getItem("password");
-    if (loginSuccess) {
-      // let  = loginData.data.data.token;
-      loginMutate({ email: email, password: password });
-      verifyMutate({ token, form });
-      return;
-    }
-    setRetry(retry + 1);
+  const handleClick = (e) => {
+  mutate({email:email, otp:form})
   };
 
   useEffect(() => {
     
 
-    if (verifySuccess) {
-      setTimeout(()=>{
-       router.push("/register/organization/onboarding");
-      },2000)
+    if (isSuccess) {
+        setLoginContext({password_token:data.data.data.password_reset_token})
+       router.push("/reset/password");
      
     }
 
-    if (verifyError) {
+    if (isError) {
       setErrorStyles(true)
-      console.log(verifyError);
+      console.log(error);
     }
-  }, [verifySuccess, verifyData, verifyError]);
-
+  }, [isSuccess, data, isError]);
 
   useEffect(() => {
-    if(loginSuccess){
-      setLoginContext({token:loginData.data.data.token})
+    if (sendOtp) {
+     requestMutate({email:email})
     }
-  }, [loginSuccess]);
+    setTimeout(()=>{
+        setSendOtp(false)
+    }, 5000)
+  }, [sendOtp]);
+
 
   
   return (
     <>
      <Typography component={'h2'} variant="h2" textAlign={'center'} fontWeight={600} marginBottom='2em'>
-      Verify your email address
+      Verify your account
       </Typography>
       <Box
         sx={{
@@ -135,9 +135,9 @@ const verification = () => {
         paddingY="3em"
         borderRadius={"16px"}
       >
-        {!verifySuccess ? (
+        {!isSuccess ? (
              <>
-          {(verifyError && errorStyles) && (
+          {(isError && errorStyles) && (
             <>
              <Alert
             icon={ <HighlightOffOutlinedIcon sx={{ color:'secondary.main' }} />}
@@ -162,6 +162,7 @@ const verification = () => {
         <TextField
           placeholder="6-digit verification code"
           id="verify"
+          
           onChange={handleForm}
           error={errorStyles}
           value={form}
@@ -186,7 +187,7 @@ const verification = () => {
             },
           }}
           InputProps={{
-            endAdornment: (verifyError && errorStyles) && (
+            endAdornment: (isError && errorStyles) && (
               <InputAdornment position="end">
                 <IconButton
                   aria-label="error button"
@@ -200,6 +201,8 @@ const verification = () => {
           }}
         />
         <Button
+          disabled={sendOtp}
+          onClick={()=>setSendOtp(true)}
           sx={{ textTransform: "none" }}
           startIcon={<SVG />}
           disableElevation
@@ -235,7 +238,7 @@ const verification = () => {
         <AlertVerificationDialog
           disabled={form}
           isShown={isShown}
-          verified={verifySuccess}
+          verified={isSuccess}
           setIsShown={setIsShown}
           getCode={handleClick}
         />

@@ -9,27 +9,27 @@ const Menuitems = [
       {
         title: "Overview",
         icon: "las la-home la-lg",
-        href: "/dashboard",
+        href: "/",
       },
       {
         title: "Donations",
         icon: "las la-gift la-lg",
-        href: "/buttons",
+        href: "/admin/donations",
       },
       {
         title: "Donation Types",
         icon: "las la-gifts la-lg",
-        href: "/forms",
+        href: "/admin/donation-types",
       },
       {
         title: "Gift Aid",
         icon: "las la-percentage la-lg",
-        href: "/alerts",
+        href: "/admin/gift-aid",
       },
       {
         title: "Donors",
         icon: "las la-user-friends la-lg",
-        href: "/rating",
+        href: "/admin/donors",
       },
     ]
   },

@@ -9,6 +9,8 @@ import { useAuthProvider } from "../../../../context/AuthProvider";
 import { useForm, Controller } from "react-hook-form";
 import CustomInput from '../../../CustomInput'
 import LinedBox from '../../../LinedBox'
+import NextButton from '../../NextButton'
+import { useLoginProvider } from '../../../../context/LoginProvider'
 
 const schema = yup.object({
   checkName:yup.string().required('please input something'),
@@ -25,6 +27,11 @@ const schema = yup.object({
 
 const PlatformStep = () => {
     const [value, setValue] = React.useState("");
+
+    
+  const { setAuthContext, organization } = useAuthProvider();
+  const {step, totalSteps, setLoginContext}= useLoginProvider()
+
     const { control, handleSubmit, formState: { errors, isValid }, watch} = useForm({
       defaultValues: {
        checkAddress:'',
@@ -44,9 +51,24 @@ const PlatformStep = () => {
     const watchAddress = watch('checkAddress')
     const watchName = watch('checkName')
   
-    const handleChecked = (event) => {
-        setValue(event.target.value);
+    const onSubmit = ({preferred_location, alt_name, alt_address_line_1, alt_address_line_2, alt_city, alt_country_id, alt_postal_code}) => {
+      const values = {
+        preferred_location,
+        alt_name,
+        alt_address_line_1,
+        alt_address_line_2,
+        alt_city,
+        alt_country_id,
+        alt_postal_code
+      }
+        console.log(values)
+        setAuthContext({organization:{...organization, ...values}});
+        if(totalSteps && step < totalSteps){
+          setLoginContext({step:step + 1 })
+          console.log(step)
+      }
       };
+
   return (
     <>
     <Typography variant="big" component={"p"}>
@@ -64,7 +86,7 @@ const PlatformStep = () => {
       >
       You will be able to modify these details at any time in your donee account area.
       </Alert>
-      <form action="">
+      <form onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="big" component={"p"} fontWeight={500}>
       Do you operate by a different name from the one registered with your regulatory body that is more familiar to your donors?
       </Typography>
@@ -161,7 +183,6 @@ const PlatformStep = () => {
               <Typography variant="small" component={"p"}>
       We may use this address in relation to your donee account to help donors more easily identify you.
       </Typography>
-              <CustomInput id={"alt_address"} setState={setValue} control={control} error={errors.alt_subsidiary_number} />
               <CustomInput id={"alt_address_line_1"} setState={setValue} control={control} error={errors.alt_address_line_1} />
           <CustomInput id={"alt_address_line_2"} setState={setValue} control={control} error={errors.alt_address_line_2} />
           <Grid container spacing={2} mb={"2em"}>
@@ -223,6 +244,7 @@ const PlatformStep = () => {
               document. (Maximum file size is 5MB.)
             </Typography>
             <Upload />
+            <NextButton disabled={!isValid}/>
           </Box>
           </form>
     </>

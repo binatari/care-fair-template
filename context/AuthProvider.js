@@ -38,6 +38,10 @@ const initState = {
 }
 export function AuthContextProvider({children}){
     const [state, setState]= useState(initState)
+    React.useEffect(()=>{
+        console.log(state)
+    },[state])
+  
     const setAuthContext = (context)=>{
         
         setState({...state, ...context})

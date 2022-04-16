@@ -8,6 +8,7 @@ import {
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import Footer from "./footer/Footer";
+import {useRouter} from 'next/router'
 
 const MainWrapper = experimentalStyled("div")(() => ({
   display: "flex",
@@ -31,6 +32,7 @@ const PageWrapper = experimentalStyled("div")(({ theme }) => ({
 }));
 
 const FullLayout = ({ children }) => {
+  
   const [isSidebarOpen, setSidebarOpen] = React.useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = React.useState(false);
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));

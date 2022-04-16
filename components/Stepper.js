@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import CheckIcon from '@mui/icons-material/Check';
 import SentimentDissatisfiedRoundedIcon from "@mui/icons-material/SentimentDissatisfiedRounded";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useLoginProvider } from "../context/LoginProvider";
 const SVG = ({active, completed, index}) => {
     return (
       <Box bgcolor={active?'primary.light': completed?'success.light':'grey.border30'} borderRadius='4px' justifyContent={'center'} alignItems={'center'} display='flex' color={active?'white':completed?'success.dark':'grey.light'}>
@@ -20,23 +21,15 @@ export default function HorizontalLinearStepper({activeStep, setActiveStep, user
   const [skipped, setSkipped] = React.useState(new Set());
   
 
+  const {setLoginContext, step}= useLoginProvider()
 
   React.useEffect(()=>{
+    const totalSteps = stepped.length
     console.log(stepped)
+    setLoginContext({totalSteps:totalSteps})
   }, [stepped])
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
+  
   return (
     <Box sx={{ width: "100%", display:'flex', alignItems:'center', flexDirection:'column' }}>
       <Stepper activeStep={activeStep} sx={{justifyContent:'center', marginBottom:"1.5em"}}>
@@ -50,9 +43,15 @@ export default function HorizontalLinearStepper({activeStep, setActiveStep, user
           //     );
           //   }
 
-          if (index < activeStep){
+          if (index < step){
               stepProps.completed = true
           }
+          
+          if (index === step){
+            stepProps.active = true
+        } else{
+          stepProps.active = false
+        }
           return (
             <Step
               key={index}
@@ -84,7 +83,7 @@ export default function HorizontalLinearStepper({activeStep, setActiveStep, user
               }}
             >
               <StepLabel
-                icon={<SVG active={index === activeStep} completed={stepProps.completed} index={index}/>}
+                icon={<SVG active={index === step} completed={stepProps.completed} index={index}/>}
                 {...labelProps}
               >
                 {userType === 'individual'? label.individualLabel : label.organizationLabel}
@@ -109,7 +108,7 @@ export default function HorizontalLinearStepper({activeStep, setActiveStep, user
         borderRadius={"16px"}
       >
       {
-        stepped.map((teststep, i)=> activeStep === i && (
+        stepped.map((teststep, i)=> step === i && (
           teststep.component
         ))
       }

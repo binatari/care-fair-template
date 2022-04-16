@@ -13,9 +13,9 @@ const AuthNav = () => {
         <Container sx={{mx:"auto", display:"flex", justifyContent:"center", py:'0.5em' }}>
             <LogoIcon/>
             
-            <Button>
+            {/* <Button>
                 
-            </Button>
+            </Button> */}
         </Container>
     </Box>
   )

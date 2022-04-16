@@ -9,151 +9,72 @@ import {
   TableRow,
   Chip,
 } from "@mui/material";
-import BaseCard from "../baseCard/BaseCard";
+import { useTable, useFilters, useGlobalFilter } from 'react-table'
 
-const products = [
-  {
-    id: "1",
-    name: "Sunil Joshi",
-    post: "Web Designer",
-    pname: "Elite Admin",
-    priority: "Low",
-    pbg: "primary.main",
-    budget: "3.9",
-  },
-  {
-    id: "2",
-    name: "Andrew McDownland",
-    post: "Project Manager",
-    pname: "Real Homes WP Theme",
-    priority: "Medium",
-    pbg: "secondary.main",
-    budget: "24.5",
-  },
-  {
-    id: "3",
-    name: "Christopher Jamil",
-    post: "Project Manager",
-    pname: "MedicalPro WP Theme",
-    priority: "High",
-    pbg: "error.main",
-    budget: "12.8",
-  },
-  {
-    id: "4",
-    name: "Nirav Joshi",
-    post: "Frontend Engineer",
-    pname: "Hosting Press HTML",
-    priority: "Critical",
-    pbg: "success.main",
-    budget: "2.4",
-  },
-];
 
-const ProductPerfomance = () => {
+const ProductPerfomance = ({columns, data, header=null}) => {
+  const instance = useTable(
+    {
+      columns,
+      data
+    },
+    useFilters, // useFilters!
+    useGlobalFilter // useGlobalFilter!
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state
+  } = instance;
+
+  // We don't want to render all of the rows for this example, so cap
+  // it for this use case
+  const firstPageRows = rows.slice(0, 10);
   return (
-    <BaseCard title="Product Perfomance">
+    <>
+       {header?.(instance)}
       <Table
+       {...getTableProps()}
         aria-label="simple table"
         sx={{
           mt: 3,
           whiteSpace: "nowrap",
+         overflow:'hidden',
+         borderTopRightRadius:"8px",  borderTopLeftRadius:"8px",
+         border:' 1px solid #EDF0F2'
+
         }}
+        size="small"
       >
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Typography color="textSecondary" variant="h6">
-                Id
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography color="textSecondary" variant="h6">
-                Assigned
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography color="textSecondary" variant="h6">
-                Name
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography color="textSecondary" variant="h6">
-                Priority
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography color="textSecondary" variant="h6">
-                Budget
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {products.map((product) => (
-            <TableRow key={product.name}>
-              <TableCell>
-                <Typography
-                  sx={{
-                    fontSize: "15px",
-                    fontWeight: "500",
-                  }}
-                >
-                  {product.id}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: "600",
-                      }}
-                    >
-                      {product.name}
-                    </Typography>
-                    <Typography
-                      color="textSecondary"
-                      sx={{
-                        fontSize: "13px",
-                      }}
-                    >
-                      {product.post}
-                    </Typography>
-                  </Box>
-                </Box>
-              </TableCell>
-              <TableCell>
-                <Typography color="textSecondary" variant="h6">
-                  {product.pname}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Chip
-                  sx={{
-                    pl: "4px",
-                    pr: "4px",
-                    backgroundColor: product.pbg,
-                    color: "#fff",
-                  }}
-                  size="small"
-                  label={product.priority}
-                ></Chip>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="h6">${product.budget}k</Typography>
-              </TableCell>
+        <TableHead sx={{ borderTopRightRadius:"8px",  borderTopLeftRadius:"8px", bgcolor:'grey.border30'}} >
+          {headerGroups.map(headerGroup => (
+          <TableRow {...headerGroup.getHeaderGroupProps()} sx={{borderTopRightRadius:"8px",  borderTopLeftRadius:"8px",}}>
+          {headerGroup.headers.map(column => (
+                <TableCell {...column.getHeaderProps()} sx={{textAlign:'center'}}>{column.render("Header")}</TableCell>
+              ))}
             </TableRow>
           ))}
+        </TableHead>
+        <TableBody {...getTableBodyProps()} >
+          {rows.map((row) => {
+            prepareRow(row)
+            return (
+            <TableRow {...row.getRowProps()} sx={{bgcolor:'white', }}>
+          { row.cells.map((cell, idx)=>{
+            return (<TableCell {...cell.getCellProps()} sx={{textAlign:'center'}}>
+              {cell.render('Cell')}
+            </TableCell>)
+          })}
+          </TableRow>
+          )
+          })}
         </TableBody>
       </Table>
-    </BaseCard>
+    </>
   );
 };
 

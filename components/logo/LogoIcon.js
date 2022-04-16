@@ -7,7 +7,7 @@ import IdonatioLogo from '../../public/logo.png'
 const LogoIcon = () => {
   return (
     <Link href="/" >
-      <img src={IdonatioLogo.src} alt={'Company logo'} style={{height:'3em'}}  />
+      <img src={IdonatioLogo.src} alt={'Company logo'} style={{height:'4em'}}  />
     </Link>
   );
 };

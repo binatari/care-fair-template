@@ -46,7 +46,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                   button
                   selected={location === item.href}
                   sx={{
-                    mb: 1,
+                    // mb: 1,
                     ...(location === item.href && {
                       color: "primary.main",
                       backgroundColor: (theme) =>

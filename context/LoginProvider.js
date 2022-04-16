@@ -5,7 +5,7 @@ const LoginContext = React.createContext()
 
 
 const initState = {
-   
+   step:0
 }
 export function LoginContextProvider({children}){
     React.useEffect(()=>{

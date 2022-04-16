@@ -11,13 +11,13 @@ import RepresentativeStep from "../../../components/register/onboarding/organiza
 import PlatformStep from "../../../components/register/onboarding/organization/PlatformStep";
 import PayoutStep from "../../../components/register/onboarding/organization/PayoutStep";
 import { AuthContextProvider } from '../../../context/AuthProvider';
+import ReviewStep from "../../../components/register/onboarding/organization/ReviewStep";
 
 
 const onboarding = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [steps, setSteps] = React.useState([]);
   const [userType, setUserType] =  React.useState('')
-  console.log(steps)
   const router = useRouter();
 
 
@@ -51,7 +51,7 @@ const onboarding = () => {
       role:'shared',
       individualLabel:'Review and submit',
       organizationLabel:'Review and submit',
-      component: <Button>game</Button>,
+      component: <ReviewStep/>,
     },
   
   ];

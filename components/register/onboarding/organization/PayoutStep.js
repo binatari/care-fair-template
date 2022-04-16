@@ -13,6 +13,9 @@ import CustomInput from "../../../CustomInput";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
+import NextButton from "../../NextButton";
+import { useLoginProvider } from "../../../../context/LoginProvider";
+import { useAuthProvider } from "../../../../context/AuthProvider";
 
 
 const schema = yup.object({
@@ -40,7 +43,8 @@ const Text = (props) => {
 const PayoutStep = () => {
   const [country, setCountry] = React.useState("United Kingdom");
   const [currency, setCurrency] = React.useState("GBP-British Pound");
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(false);
+  const { setAuthContext, region } = useAuthProvider();
   const { control, handleSubmit, formState: { errors, isValid }, watch} = useForm({
     defaultValues: {
         sort_code:"",
@@ -51,11 +55,16 @@ const PayoutStep = () => {
     mode: 'onChange',
   });
 
-  const handleChange = (event) => {
-    setCountry(event.target.value);
+  const handleCheck = (event) => {
+    setValue(event.target.checked);
   };
 
-  const onSubmit = () =>console.log
+  const {step, totalSteps, setLoginContext}= useLoginProvider()
+
+  const onSubmit = ({sort_code, account_number}) =>{
+    setAuthContext({sort_code, account_number})
+    setLoginContext({step:step + 1 })
+  }
   return (
     <>
       <Typography variant="big" component={"p"}>
@@ -108,7 +117,6 @@ const PayoutStep = () => {
           disabled
           margin="none"
           size="small"
-          onChange={handleChange}
           fullWidth
           sx={{
             border: "none",
@@ -167,10 +175,11 @@ const PayoutStep = () => {
                 fontSize: "1.2rem",
               },
             }}
-            control={<Checkbox />}
+            control={<Checkbox checked={value} onChange={handleCheck} />}
             label={<Text />}
           />
         </FormGroup>
+        <NextButton  disabled={!isValid || !value}/>
       </Box>
       </form>
     </>

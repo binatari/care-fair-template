@@ -2,8 +2,9 @@ import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 
 
-export const subscribe = (data) => {
-    return axios.patch('https://idonatio-api.herokuapp.com/api/v1/donees/onboard', data, {
+export const subscribe = ({finalResponse, token}) => {
+    console.log(finalResponse, token)
+    return axios.patch('https://idonatio-api.herokuapp.com/api/v1/donees/onboard', {...finalResponse, country_id:'bf82fef9-1dfb-4a0f-8132-2c74801d39ee'}, {
         headers: { Authorization: `Bearer ${token}` }
     })
 }
@@ -18,13 +19,22 @@ export const login = (data) => {
 }
 
 
-export const verify = ({token, otp}) => {
-    return axios.post('https://idonatio-api.herokuapp.com/api/v1/auth/verify/email', {otp}, {
+export const verify = ({token, form}) => {
+    console.log(token, form)
+    return axios.post('https://idonatio-api.herokuapp.com/api/v1/auth/verify/email', {otp:form}, {
         headers: { Authorization: `Bearer ${token}` }
     })
 }
 
+export const sendOtp= (data) => {
+    console.log(data)
+    return axios.post('https://idonatio-api.herokuapp.com/api/v1/auth/password/forgot', data)
+}
 
+
+export const checkOtp= (data) => {
+    return axios.patch('https://idonatio-api.herokuapp.com/api/v1/auth/password/validate-otp', data)
+}
 
 
 
@@ -43,4 +53,12 @@ export const onLogin = () =>{
 
 export const onVerify = () =>{
     return useMutation(verify)
+}
+
+export const requestOtp = () =>{
+    return useMutation(sendOtp)
+}
+
+export const validateOtp = () =>{
+    return useMutation(checkOtp)
 }
