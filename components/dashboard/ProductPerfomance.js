@@ -8,15 +8,15 @@ import {
   TableHead,
   TableRow,
   Chip,
+  Checkbox,
 } from "@mui/material";
-import { useTable, useFilters, useGlobalFilter } from 'react-table'
+import { useTable, useFilters, useGlobalFilter } from "react-table";
 
-
-const ProductPerfomance = ({columns, data, header=null}) => {
+const ProductPerfomance = ({ columns, data, header = null }) => {
   const instance = useTable(
     {
       columns,
-      data
+      data,
     },
     useFilters, // useFilters!
     useGlobalFilter // useGlobalFilter!
@@ -28,7 +28,7 @@ const ProductPerfomance = ({columns, data, header=null}) => {
     headerGroups,
     rows,
     prepareRow,
-    state
+    state,
   } = instance;
 
   // We don't want to render all of the rows for this example, so cap
@@ -36,44 +36,77 @@ const ProductPerfomance = ({columns, data, header=null}) => {
   const firstPageRows = rows.slice(0, 10);
   return (
     <>
-       {header?.(instance)}
+      {header?.(instance)}
+      <Box sx={{overflowX:'auto', mb:'5em'}}>
       <Table
-       {...getTableProps()}
+        {...getTableProps()}
         aria-label="simple table"
         sx={{
           mt: 3,
           whiteSpace: "nowrap",
-         overflow:'hidden',
-         borderTopRightRadius:"8px",  borderTopLeftRadius:"8px",
-         border:' 1px solid #EDF0F2'
-
+          overflow: "hidden",
+          borderTopRightRadius: "8px",
+          borderTopLeftRadius: "8px",
+          border: " 1px solid #EDF0F2",
         }}
         size="small"
       >
-        <TableHead sx={{ borderTopRightRadius:"8px",  borderTopLeftRadius:"8px", bgcolor:'grey.border30'}} >
-          {headerGroups.map(headerGroup => (
-          <TableRow {...headerGroup.getHeaderGroupProps()} sx={{borderTopRightRadius:"8px",  borderTopLeftRadius:"8px",}}>
-          {headerGroup.headers.map(column => (
-                <TableCell {...column.getHeaderProps()} sx={{textAlign:'center'}}>{column.render("Header")}</TableCell>
+        <TableHead
+          sx={{
+            borderTopRightRadius: "8px",
+            borderTopLeftRadius: "8px",
+            bgcolor: "grey.border30",
+          }}
+        >
+          {headerGroups.map((headerGroup) => (
+            <TableRow
+              {...headerGroup.getHeaderGroupProps()}
+              sx={{ borderTopRightRadius: "8px", borderTopLeftRadius: "8px" }}
+            >
+              <TableCell padding="checkbox">
+                <Checkbox
+                  color="primary"
+                  // checked={isItemSelected}
+                />
+              </TableCell>
+              {headerGroup.headers.map((column) => (
+                <TableCell
+                  {...column.getHeaderProps()}
+                  sx={{ textAlign: "center" }}
+                >
+                  {column.render("Header")}
+                </TableCell>
               ))}
             </TableRow>
           ))}
         </TableHead>
-        <TableBody {...getTableBodyProps()} >
+        <TableBody {...getTableBodyProps()}>
           {rows.map((row) => {
-            prepareRow(row)
+            prepareRow(row);
             return (
-            <TableRow {...row.getRowProps()} sx={{bgcolor:'white', }}>
-          { row.cells.map((cell, idx)=>{
-            return (<TableCell {...cell.getCellProps()} sx={{textAlign:'center'}}>
-              {cell.render('Cell')}
-            </TableCell>)
-          })}
-          </TableRow>
-          )
+              <TableRow {...row.getRowProps()} sx={{ bgcolor: "white" }}>
+                <TableCell padding="checkbox">
+                <Checkbox
+                  color="primary"
+                  // checked={isItemSelected}
+                />
+              </TableCell>
+                {row.cells.map((cell, idx) => {
+                  return (
+                    <TableCell
+                      {...cell.getCellProps()}
+                      sx={{ textAlign: "center" }}
+                    >
+                      {cell.render("Cell")}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            );
           })}
         </TableBody>
       </Table>
+      </Box>
     </>
   );
 };

@@ -1,14 +1,98 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ProductPerfomance from "../../components/dashboard/ProductPerfomance";
 import FullLayout from "../../components/layouts/FullLayout";
 import TableFilter from '../../components/dashboard/TableFilter'
 import Card from "../../components/Card";
+import { useLoginProvider } from "../../context/LoginProvider";
+import{useRouter}from 'next/router'
+import {useEffect} from 'react'
+import {onGetDonations, onGetDonationsSummary } from "../../src/utils/queries";
+import moment from "moment";
 
+// export async function getServerSideProps() {
+//   // Fetch data from external API
+//   const res = await api.get('/donations')
+//   const data = await res.json()
 
-
-export default function Donations() {
+//   // Pass data to the page via props
+//   return { props: { data } }
+// }
+//create useEffect to handle authentication on route change
+export default function Donations({props}) {
+  const {token} = useLoginProvider()
+  moment.updateLocale('en', {
+    relativeTime : {
+        future: "in %s",
+        past:   "%s ago",
+        s  : 'a few seconds',
+        ss : '%d seconds',
+        m:  "a minute",
+        mm: "%d minutes",
+        h:  "an hour",
+        hh: "%d hours",
+        d:  "a day",
+        dd: "%d days",
+        w:  "a week",
+        ww: "%d weeks",
+        M:  "a month",
+        MM: "%d months",
+        y:  "a year",
+        yy: "%d years"
+    }
+});
   
+  const router = useRouter()
+  const [calledData, setCalledData] = useState([])
+  const [summaryCalledData, setSummaryCalledData] = useState({})
+  
+  const {
+    isLoading,
+    isSuccess,
+    error,
+    isError,
+    data,
+  } = onGetDonations(token)
+
+  const {
+    isLoading:summaryLoading,
+    isSuccess:summarySuccess,
+    error:summaryError,
+    isError:summaryCheckError,
+    data:summaryData,
+  } = onGetDonationsSummary(token)
+
+  useEffect(() => {
+  if(!token){
+    router.push('/login')
+    return
+  }
+  }, [])
+  
+  useEffect(() => {
+    if(isSuccess){
+     console.log(data.data.data.data)
+     setCalledData(data.data.data.data)
+    }
+    if(isError){
+      console.log(error.response, error)
+    }
+    //put the dependencies in later
+    }, [isSuccess, isError])
+
+
+    useEffect(() => {
+      if(summarySuccess){
+       console.log(summaryData.data.data)
+       const summarisedData = summaryData.data.data
+       setSummaryCalledData(summarisedData)
+      }
+      if(summaryCheckError){
+        console.log(summaryError.response)
+      }
+      //put the dependencies in later
+      }, [summarySuccess, summaryError])
+    
   const columns = useMemo(
     () => [
       {
@@ -16,26 +100,34 @@ export default function Donations() {
         accessor:'id'
       },
       {
+        // id:'donor',
         Header: "DONOR",
-        accessor:'lastName'
+        accessor: 'donor.first_name',
+        Cell:({cell})=>{
+          return `${cell.row.original.donor.first_name} ${cell.row.original.donor.last_name}`
+        }
       },
       {
         Header: "DATE & TIME",
-        accessor:'firstName'
-      },
-      {
-        Header: "TYPE",
-        accessor:'age',
+        accessor:'created_at',
+        Cell:({value})=>moment(value).format("DD MMM YYYY"),
         filter:(rows, columnId, filterValue)=>{
           return rows.filter((row)=>{
-            console.log(filterValue)
-            if(row.original.height)return row
+            // console.log(filterValue)
+            // console.log(row.original)
+            if(row.original)return row
           })
         }
       },
       {
+        Header: "TYPE",
+        accessor:'donation_details[0].donation_type.type',
+        
+      },
+      {
         Header: "GIFT AID",
-        accessor:'height'
+        accessor:'apply_gift_aid_to_donation',
+        Cell:({value})=>value === true && 'eligible'
       },
       {
         Header: "CHANNEL",
@@ -43,42 +135,32 @@ export default function Donations() {
       },
       {
         Header: "AMOUNT",
-        accessor:'size'
+        accessor:'donation_details[0].amount'
       },
     ],
     []
   );
 
-  const rows = useMemo (()=>[
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35, height: 1200, weight:30, size:10 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42, height: 50, weight:30, size:10 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45, height:5000, weight:30, size:10 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16, height: 2000, weight:30, size:10 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null, height: 2500, weight:30, size:10 },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150, height: 50, weight:30, size:10 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44, height: 50, weight:30, size:10 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36, height: 50, weight:30, size:10 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65, height: 50, weight:30, size:10 },
-  ], []);
+  const rows = useMemo (()=>calledData, [calledData]);
 
   const cards = [
     {
       header:'TOTAL DONATION AMOUNT',
       currency:'$',
-      body:'97,020'
+      body:summaryCalledData?.total_donation_amount
     },
     {
       header:'NO. OF DONATIONS',
-      body:'245'
+      body:summaryCalledData?.number_of_donations
     },
     {
       header:'AVG. DONATION AMOUNT',
       currency:'$',
-      body:'369'
+      body:summaryCalledData?.average_donation_amount
     },
     {
       header:'UNIQUE DONORS',
-      body:'136'
+      body:summaryCalledData?.unique_donations
     }
   ]
 
@@ -123,7 +205,7 @@ export default function Donations() {
         ))
       }
      
-      <Grid item xs={12} lg={11} mt='2.5em'>
+      <Grid item xs={12} lg={11} mt='2.5em' >
         <ProductPerfomance columns={columns} data={rows} header={TableFilter}/>
         
       </Grid>

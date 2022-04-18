@@ -166,7 +166,7 @@ const theme = createTheme({
     warning:{
       main:'#FFAB00',
       dark:'#B37800',
-      light:'#B37800',
+      light:'#FFEECC',
       lightest:'#FFFAF0'
     },
     success:{

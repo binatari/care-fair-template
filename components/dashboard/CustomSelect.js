@@ -22,7 +22,7 @@ const CustomSelect = ({setFilter}) => {
   const secondOpen = Boolean(secondAnchorEl);
   const secondHandleClose = () => {
     if (dateValue.length === 2) {
-        setFilter("age", dateValue);
+        setFilter("created_at", dateValue);
         setSecondAnchorEl(null);
       }
    

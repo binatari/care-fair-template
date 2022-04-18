@@ -40,7 +40,7 @@ const schema = yup.object({
 const index = () => {
   const router = useRouter()
   const [showPassword, setShowPassword] = React.useState(false);
-
+  const {setLoginContext} = useLoginProvider()
   const {
     mutate,
     isLoading,
@@ -53,7 +53,8 @@ const index = () => {
   React.useEffect(()=>{
     if(isSuccess){
       setLoginContext({token:data.data.data.token})
-      router.push('/dashboard')
+      localStorage.setItem('token', data.data.data.token)
+      router.push('/admin/donations')
     }
     if(isError){
       console.log(error.message)
@@ -63,7 +64,7 @@ const index = () => {
   }, [isSuccess, isError])
 
 
-  const {setLoginContext} = useLoginProvider()
+  
 
   const all = useLoginProvider()
  
