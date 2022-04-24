@@ -14,8 +14,12 @@ import { useEffect, useRef, useState } from "react";
 import DateSetter from "../DatePicker";
 import moment from "moment";
 import CustomSelect from "./CustomSelect";
+import TypeFilter from "./TypeFilter";
+import AidFilter from "./AidFilter";
+import ChannelFilter from "./ChannelFilter";
+import AmountFilter from "./AmountFilter";
 
-const TableFilter = ({ setGlobalFilter, setFilter, rows, filterValue, state, prefilteredRows }) => {
+const TableFilter = ({ setGlobalFilter, setFilter, rows, filterValue, state, preFilteredRows }) => {
   return (
     <div style={{ marginBottom: "16px" }}>
       {/* <input
@@ -25,7 +29,10 @@ const TableFilter = ({ setGlobalFilter, setFilter, rows, filterValue, state, pre
           placeholder="Filter outside table"
         /> */}
       <CustomSelect setFilter={setFilter}/>
-      
+      <TypeFilter setFilter={setFilter} preFilteredRows={preFilteredRows}/>
+      <AidFilter setFilter={setFilter} preFilteredRows={preFilteredRows}/>
+      <ChannelFilter setFilter={setFilter} preFilteredRows={preFilteredRows}/>
+      <AmountFilter setFilter={setFilter} preFilteredRows={preFilteredRows}/>
     </div>
   );
 };

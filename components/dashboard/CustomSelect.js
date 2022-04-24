@@ -32,8 +32,18 @@ const CustomSelect = ({setFilter}) => {
 
   const handleChange = (event) => {
     setValue(event.target.value);
+    if (event.target.value === 10) {
+      setFilter("created_at", [moment().subtract(1, 'weeks').endOf('week'), moment()])
+      return
+    }
+
+    if (event.target.value === 40) {
+      setFilter("created_at", [moment().subtract(1, 'months').endOf('month'), moment()])
+      return
+    }
     if (event.target.value === 30) {
       setSecondAnchorEl(inputElement.current.node);
+      return
     }
   };
 

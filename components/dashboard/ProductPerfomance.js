@@ -43,7 +43,7 @@ const ProductPerfomance = ({ columns, data, header = null }) => {
         aria-label="simple table"
         sx={{
           mt: 3,
-          whiteSpace: "nowrap",
+          whiteSpace: "wrap",
           overflow: "hidden",
           borderTopRightRadius: "8px",
           borderTopLeftRadius: "8px",
