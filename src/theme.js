@@ -7,52 +7,82 @@ import "@fontsource/inter/900.css"
 // Create a theme instance.
 const theme = createTheme({
   typography: {
-    big: {
-      color: '#425A70',
-      fontSize: '14px',
-      lineHeight: '20px',
-    },
-    small:{
-      color: '#66788A',
-      fontSize: '12px',
-      lineHeight: '18px',
-    },
      h1: {
-    fontWeight: 500,
-    fontSize: "1.875rem",
-    lineHeight: "1.5",
+    fontSize: "56px",
+    lineHeight: "61.6px",
   },
   h2: {
-    fontWeight: 500,
-    fontSize: "1.5rem",
-    lineHeight: "1.5",
+    fontSize: "48px",
+    lineHeight: "52.8px",
   },
   h3: {
-    fontWeight: 500,
-    fontSize: "1.3125rem",
-    lineHeight: "1.5",
+    fontSize: "40px",
+    lineHeight: "44px",
   },
   h4: {
-    fontWeight: 600,
-    fontSize: "1.125rem",
-    lineHeight: "1.5",
+    fontSize: "32px",
+    lineHeight: "35.2px",
   },
   h5: {
-    fontWeight: 500,
-    fontSize: "1rem",
-    lineHeight: "1.5",
+    fontSize: "24px",
+    lineHeight: "26.4px",
   },
   h6: {
-    fontWeight: 500,
-    fontSize: "0.875rem",
-    lineHeight: "1.5",
+    fontSize: "20px",
+    lineHeight: "22px",
   },
+  big:{
     fontFamily: 'Inter, sans-serif; ',
-    fontSize:14,
-    lineHeight: 20,
+    fontSize:16,
+    lineHeight: "20px",
+  },
+small:{
+  fontFamily: 'Inter, sans-serif; ',
+  fontSize:14,
+  lineHeight: "20px",
+},
+fontFamily: 'Inter, sans-serif; ',
+fontSize:14,
+lineHeight: "20px",
   },
 
   components: {
+    MuiButton: {
+      variants: [
+        {
+          props: { variant: 'fill', },
+          style: {
+            textTransform: 'none',
+            borderRadius:'16px',
+            backgroundColor:'#4136F1',
+            color:'white',
+            ':hover':{
+              backgroundColor:'#4136F1',
+            }
+          },
+        },
+        {
+          props: { variant: 'outline',},
+          style: {
+            textTransform: 'none',
+            borderRadius:'16px',
+            borderColor:'#FFFFFF1A',
+            backgroundColor:'#FFFFFF1A',
+            color:'white',
+            ':hover':{
+              
+            }
+          },
+        },
+      ],
+      styleOverrides: {
+        // Name of the slot
+        root: {
+          // Some CSS
+         borderRadius:'16px'
+        },
+      },
+    },
     // Name of the component
     MuiStepConnector: {
       styleOverrides: {
@@ -140,16 +170,15 @@ const theme = createTheme({
         },
     }
   },
+
   },
 
   palette: {
     primary: {
-      main: '#2962FF',
-      dark: '#2251D3',
-      darker: '#1B41AA',
-      darkest: '#15317F',
-      light:'#D6E1FF',
-      lightest:'#F5F8FF'
+      blue:'#4136F1',
+      green:'#9BFFE1',
+      main:'#1B2448',
+      light:'#9FA2B4',
     },
     secondary: {
       main: '#FF0000',
@@ -176,14 +205,8 @@ const theme = createTheme({
       lightest:'#F0FFF6'
     },
     grey:{
-      main:'#425A70',
-      dark:'#234361',
-      light:'#66788A',
-      lightest:'#C4CBD4',
-      border30:'#EDF0F2',
-      border40:'#E4E7EB',
-      bg20:'#F5F6F7',
-      bg10:'#FAFAFA'
+      main:'#DDE2FF',
+      light:'#A4A6B3'
     }
   },
 });

@@ -34,7 +34,9 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
   const location = curl.pathname;
 
   const SidebarContent = (
-    <Box p={2} height="100%">
+    <>
+    <LogoIcon/>
+    <Box py={2} height="100%">
       {/* <LogoIcon /> */}
       <Box mt={2}>
         <List sx={{mb:'2.75em'}}>
@@ -50,10 +52,9 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                     ...(location === item.href && {
                       color: "primary.main",
                       backgroundColor: (theme) =>
-                        `${theme.palette.grey.bg20}!important`,
+                        `${theme.palette.primary.light}!important`,
                       borderLeft: (theme) =>
-                        `2px solid ${theme.palette.primary.main}`,
-                      borderRadius: "0px 8px 8px 0px",
+                        `2px solid ${theme.palette.grey.main}`,
                     }),
                   }}
                 >
@@ -77,7 +78,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                   <ListItemText
                     disableTypography
                     primary={
-                      <Typography variant="big" sx={{ color: `${location === item.href ? "blue" : ""}`}}>
+                      <Typography variant="big" sx={{ color: `${location === item.href ? "grey.main" : "grey.light"}`}}>
                        {item.title}
                       </Typography>
                     }
@@ -91,6 +92,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
         </List>
       </Box>
     </Box>
+    </>
   );
   if (lgUp) {
     return (
@@ -102,9 +104,9 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
           sx: {
             width: "265px",
             border: "0 !important",
-            pt: "64px",
+            // pt: "64px",
             // boxShadow: "0px 7px 30px 0px rgb(113 122 131 / 11%)",
-            background: "inherit",
+            bgcolor: "primary.main",
           },
         }}
       >

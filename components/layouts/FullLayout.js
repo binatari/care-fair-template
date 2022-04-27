@@ -40,7 +40,7 @@ const FullLayout = ({ children }) => {
     <MainWrapper>
       <Header
       position="fixed"
-      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, //paddingLeft: isSidebarOpen && lgUp ? "265px" : "",
+      sx={{  paddingLeft: isSidebarOpen && lgUp ? "265px" : "",
       backgroundColor: "#fbfbfb", }}
         toggleMobileSidebar={() => setMobileSidebarOpen(true)}
       />
@@ -51,8 +51,9 @@ const FullLayout = ({ children }) => {
       />
       <PageWrapper>
         <Container
-          maxWidth={false}
+        maxWidth={false}
           sx={{
+            mx:'auto',
             paddingTop: "20px",
             paddingLeft: isSidebarOpen && lgUp ? "280px!important" : "",
           }}

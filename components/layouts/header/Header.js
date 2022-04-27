@@ -1,16 +1,26 @@
 import React from "react";
-import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 // Dropdown Component
 import SearchDD from "./SearchDD";
 import ProfileDD from "./ProfileDD";
 import LogoIcon from "../../logo/LogoIcon";
-
+import {useRouter} from "next/router"
 const Header = ({ sx, customClass, toggleMobileSidebar, position }) => {
+  const router = useRouter()
+  const pageName = router.pathname
+
+  const pathFormat = (str) =>{
+    const nameFormat = str.replace('-', ' ')
+    const removePath = nameFormat.replace('/admin/', '')
+    return removePath
+  }
   return (
     <AppBar sx={sx} position={position} elevation={0} className={customClass}>
       <Toolbar>
-        <LogoIcon/>
+        <Typography variant="h5" sx={{color:'black', fontWeight:'700'}}>
+          {pathFormat(pageName)}
+        </Typography>
         <IconButton
           size="large"
           color="inherit"
@@ -23,15 +33,19 @@ const Header = ({ sx, customClass, toggleMobileSidebar, position }) => {
             },
           }}
         >
+          {/*put button here*/}
         </IconButton>
         {/* ------------------------------------------- */}
         {/* Search Dropdown */}
         {/* ------------------------------------------- */}
-        <SearchDD />
+      
         {/* ------------ End Menu icon ------------- */}
 
         <Box flexGrow={1} />
+        <Box>
 
+        <ProfileDD />
+        </Box>
       </Toolbar>
     </AppBar>
   );

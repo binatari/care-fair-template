@@ -9,27 +9,22 @@ const Menuitems = [
       {
         title: "Overview",
         icon: "las la-home la-lg",
-        href: "/",
+        href: "/admin/overview",
       },
       {
-        title: "Donations",
+        title: "Carereceivers",
         icon: "las la-gift la-lg",
-        href: "/admin/donations",
+        href: "/admin/care-receivers",
       },
       {
-        title: "Donation Types",
+        title: "Caretakers",
         icon: "las la-gifts la-lg",
-        href: "/admin/donation-types",
+        href: "/admin/care-takers",
       },
       {
-        title: "Gift Aid",
+        title: "Care Agencies",
         icon: "las la-percentage la-lg",
-        href: "/admin/gift-aid",
-      },
-      {
-        title: "Donors",
-        icon: "las la-user-friends la-lg",
-        href: "/admin/donors",
+        href: "/admin/care-agencies",
       },
     ]
   },

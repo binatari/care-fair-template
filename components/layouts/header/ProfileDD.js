@@ -10,7 +10,9 @@ import {
   ListItemText,
   Button,
   Divider,
+  Avatar,
 } from "@mui/material";
+import LogoIcon from "../../logo/LogoIcon";
 const ProfileDD = () => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
 
@@ -30,36 +32,7 @@ const ProfileDD = () => {
         aria-haspopup="true"
         onClick={handleClick4}
       >
-        <Box display="flex" alignItems="center">
-          <Box
-            sx={{
-              display: {
-                xs: "none",
-                sm: "flex",
-              },
-              alignItems: "center",
-            }}
-          >
-            <Typography
-              color="textSecondary"
-              variant="h5"
-              fontWeight="400"
-              sx={{ ml: 1 }}
-            >
-              Hi,
-            </Typography>
-            <Typography
-              variant="h5"
-              fontWeight="700"
-              sx={{
-                ml: 1,
-              }}
-            >
-              Julia
-            </Typography>
-            {/* <FeatherIcon icon="chevron-down" width="20" height="20" /> */}
-          </Box>
-        </Box>
+        <Avatar>H</Avatar>
       </Button>
       <Menu
         id="profile-menu"

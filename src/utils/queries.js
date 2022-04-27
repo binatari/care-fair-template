@@ -1,28 +1,33 @@
 import axios from "axios";
+import authHeader from "./services";
 import { useMutation, useQuery } from "react-query";
 
 export const api = axios.create({
-    baseURL:'https://idonatio-api.herokuapp.com/api/v1'
+    baseURL:'https://api.thecarefair.com/api/v1/',
+    headers:{
+        'Content-Type':'application/json',
+        accept:'application/json'
+    }
 })
+
+api.interceptors.request.use(function (config) {
+    const token = localStorage.getItem('token');
+    config.headers.Authorization =  token ? `Bearer ${token}` : '';
+    return config;
+});
 
 
 export const subscribe = ({finalResponse, token}) => {
     console.log(finalResponse, token)
-    return api.patch('/donees/onboard', {...finalResponse, country_id:'bf82fef9-1dfb-4a0f-8132-2c74801d39ee'}, {
-        headers: { Authorization: `Bearer ${token}` }
-    })
+    return api.patch('/donees/onboard', {...finalResponse, country_id:'bf82fef9-1dfb-4a0f-8132-2c74801d39ee'},)
 }
 
-export const getDonations = (token) => {
-    return api.get('/donations', {
-        headers: { Authorization: `Bearer ${token}` }
-    })
+export const getDonations = () => {
+    return api.get('/donations',)
 }
 
-export const getDonationsSummary = (token) => {
-    return api.get('/donations/summary', {
-        headers: { Authorization: `Bearer ${token}` }
-    })
+export const getDonationsSummary = () => {
+    return api.get('/donations/summary',)
 }
 
 export const register = (data) => {
@@ -31,22 +36,17 @@ export const register = (data) => {
 
 
 export const getUser = (data) => {
-    return api.get('/auth/user', {
-        headers: { Authorization: `Bearer ${data}` }
-    })
+    return api.get('/auth/user')
 }
 
 
 export const login = (data) => {
-    return api.post('/auth/login', data)
+    return api.post('/admin/auth/login', {...data, _token: "{{ csrf_token() }}"})
 }
 
 
 export const verify = ({token, form}) => {
-    console.log(token, form)
-    return api.post('/auth/verify/email', {otp:form}, {
-        headers: { Authorization: `Bearer ${token}` }
-    })
+    return api.post('/auth/verify/email', {otp:form},)
 }
 
 export const sendOtp= (data) => {
@@ -60,16 +60,23 @@ export const checkOtp= (data) => {
 }
 
 export const getDonationTypes = (token) => {
-    return api.get('/donation-types', {
-        headers: { Authorization: `Bearer ${token}` }
-    })
+    return api.get('/donation-types',)
 }
 
 export const getDonationType = (token, id) => {
-    return api.get(`/donation-types/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-    })
+    return api.get(`/donation-types/${id}`,)
 }
+
+
+export const getDonors = () => {
+    return api.get(`/donors`,)
+}
+
+
+export const getDonorsSummary = () => {
+    return api.get(`/donors/summary`,)
+}
+
 
 //donations page
 export const onGetDonations = (token) =>{
@@ -93,6 +100,14 @@ export const onGetDonationType = (token, id) =>{
 
 export const onGetUser = (token) =>{
     return useQuery('getUser', ()=>getUser(token))
+}
+
+export const onGetDonors = () =>{
+    return useQuery('getDonors', getDonors)
+}
+
+export const onGetDonorsSummary = () =>{
+    return useQuery('getDonorsSummary', getDonorsSummary)
 }
 
 

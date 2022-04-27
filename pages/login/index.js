@@ -24,7 +24,7 @@ import { useAuthProvider } from "../../context/AuthProvider";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
-import HelperText from "../../components/HelperText";
+// import HelperText from "../../components/HelperText";
 import { onLogin, onRegister } from "../../src/utils/queries";
 import { useLoginProvider } from "../../context/LoginProvider";
 import { useRouter } from "next/router";
@@ -54,7 +54,7 @@ const index = () => {
     if(isSuccess){
       setLoginContext({token:data.data.data.token})
       localStorage.setItem('token', data.data.data.token)
-      router.push('/admin/donations')
+      router.push('/admin/overview')
     }
     if(isError){
       console.log(error.message)
@@ -78,10 +78,10 @@ const index = () => {
     mode: 'onChange',
   });
   const onSubmit = ({password, email, checkbox}) => {
-    if(checkbox){
-      localStorage.setItem('email', email)
-    localStorage.setItem('password', password)
-    }
+    // if(checkbox){
+    //   localStorage.setItem('email', email)
+    // localStorage.setItem('password', password)
+    // }
     console.log(password, email);
     mutate({ email, password, });
   };
@@ -120,7 +120,7 @@ const index = () => {
               <TextField
                 onChange={onChange}
                 size="small"
-                helperText={errors.email && <HelperText text={errors.email.message} />}
+                // helperText={errors.email && <HelperText text={errors.email.message} />}
                 value={value}
                 fullWidth
                 error={errors.email}
@@ -167,7 +167,7 @@ const index = () => {
           <TextField
             placeholder="password"
             error={errors.password}
-            helperText={errors.password && <HelperText text={errors.password.message} />}
+            // helperText={errors.password && <HelperText text={errors.password.message} />}
             sx={{
               border: "none",
               borderColor: "",

@@ -1,15 +1,23 @@
 import { Box, Typography } from '@mui/material'
 import React from 'react'
 
-const Card = ({Header=false, body=false}) => {
+const Card = ({Header=false, body=false, component=false}) => {
   return (
-    <Box bgcolor={'white'} mx='1.5em' borderRadius={'0.5em'} pt='1em' pb='1.5em'>
-        <Typography fontSize={'10px'} lineHeight='16px' color={'success.dark'} mb='1em' textAlign='center'>
-            {Header}
-        </Typography>
-        <Typography fontSize={'32px'} lineHeight='40px' textAlign='center'>
-        {body}
-        </Typography>
+    <Box bgcolor={'white'} borderRadius={'0.5em'} pt='1em' pb='1.5em' px='4em' border={'1px solid #DFE0EB'} height='100%' display={'flex'} flexDirection='column' justifyContent={'center'}>
+      
+      {
+        component? component : (
+          <>
+        <Typography fontSize={'16px'} lineHeight='20px' color={'grey.dark'} mb='1em'>
+        {Header}
+    </Typography>
+    <Typography fontSize={'26px'} lineHeight='33px' fontWeight={700}>
+    {body}
+    </Typography>
+    </>
+    )
+      }
+   
     </Box>
   )
 }
