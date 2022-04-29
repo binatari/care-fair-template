@@ -6,7 +6,7 @@ import Card from "../../components/Card";
 import FullLayout from "../../components/layouts/FullLayout";
 import ListCard from "../../components/ListCard";
 import nookies from 'nookies'
-import { onGetActivityTimeline, onGetRecentAgencies, onGetRecentGivers, onGetRecentReceivers, onGetStatisticsOverview } from "../../src/utils/queries";
+import { onGetActivityTimeline, onGetRecentAgencies, onGetRecentGivers, onGetRecentReceivers, onGetStatisticsOverview } from "../../src/utils/adminQueries";
 const WelcomeCard = () => {
   return (
     <Box

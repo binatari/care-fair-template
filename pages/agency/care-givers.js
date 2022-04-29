@@ -22,53 +22,48 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Tabs from "../../components/Tabs";
 import {
-  onGetAllReceivers,
-  onGetParticularReceiver,
-  onGetReceiverStatistics,
-  onGetReceiverSubscription,
-  onGetReceiverSubscriptions,
-} from "../../src/utils/adminQueries";
+  onGetAllGivers,
+  onGetGiverSubscription,
+  onGetGiverSubscriptions,
+  onGetParticularGiver,
+ 
+} from "../../src/utils/agencyQueries";
 import CustomListItem from "../../components/CustomListItem";
-import { SetMealSharp } from "@mui/icons-material";
 import InfoPanel from "../../components/InfoPanel";
 import InfoCard from "../../components/InfoCard";
+import AgencyLayout from "../../components/layouts/AgencyLayout";
 const donations = () => {
   const [view, setView] = useState(false);
-  const [receivers, setReceivers] = useState(null);
-  const [receiver, setReceiver] = useState(null);
-  const [statisticsState, setStatisticsState] = useState(null);
-  const [subscriptionState, setSubscriptionState] = useState(null);
-  const [subscriptionsState, setSubscriptionsState] = useState(null);
+  const [givers, setGivers] = useState(null);
+  const [giver, setGiver] = useState(null);
+//   const [statisticsState, setStatisticsState] = useState(null);
+//   const [subscriptionState, setSubscriptionState] = useState(null);
+//   const [subscriptionsState, setSubscriptionsState] = useState(null);
   const [id, setId] = useState("");
   const [value, setValue] = React.useState("1");
 
   const {
-    data: receiversData,
-    isError: receiversIsError,
-    isSuccess: receiversIsSuccess,
-  } = onGetAllReceivers();
+    data: giversData,
+    isError: giversIsError,
+    isSuccess: giversIsSuccess,
+  } = onGetAllGivers();
   const {
-    data: receiverData,
-    isError: receiverIsError,
-    isSuccess: receiverIsSuccess,
-  } = onGetParticularReceiver(id);
-  const {
-    data: statistics,
-    isError: statisticsError,
-    isSuccess: statisticsIsSuccess,
-  } = onGetReceiverStatistics(id);
+    data: giverData,
+    isError: giverIsError,
+    isSuccess: giverIsSuccess,
+  } = onGetParticularGiver(id);
 
-  const {
-    data: subscriptionData,
-    isError: subscriptionError,
-    isSuccess: subscriptionIsSuccess,
-  } = onGetReceiverSubscription(id);
+//   const {
+//     data: subscriptionData,
+//     isError: subscriptionError,
+//     isSuccess: subscriptionIsSuccess,
+//   } = onGetGiverSubscription(id);
 
-  const {
-    data: subscriptionsData,
-    isError: subscriptionsError,
-    isSuccess: subscriptionsIsSuccess,
-  } = onGetReceiverSubscriptions(id);
+//   const {
+//     data: subscriptionsData,
+//     isError: subscriptionsError,
+//     isSuccess: subscriptionsIsSuccess,
+//   } = onGetGiverSubscriptions(id);
 
 
   const handleChange = (e, newValue) => {
@@ -76,72 +71,35 @@ const donations = () => {
   };
 
   useEffect(() => {
-    if (receiversIsSuccess) {
-      const { data } = receiversData;
+    if (giversIsSuccess) {
+      const { data } = giversData;
       console.log(data);
-      setReceivers(data);
+      setGivers(data);
     }
-    if (receiversIsError) {
+    if (giversIsError) {
       console.log("err");
     }
-  }, [receiversIsError, receiversIsSuccess]);
+  }, [giversIsError, giversIsSuccess]);
 
   useEffect(() => {
-    if (receiverIsSuccess) {
-      const { data } = receiverData;
+    if (giverIsSuccess) {
+      const { data } = giverData;
       console.log(data);
-      setReceiver(data);
-      console.log(receiverData);
+      setGiver(data);
+      console.log(giverData);
     }
-    if (receiverIsError) {
+    if (giverIsError) {
       console.log("err");
     }
-  }, [receiverIsError, receiverIsSuccess]);
-
-  useEffect(() => {
-    if (statisticsIsSuccess) {
-      console.log("statistics");
-      const { data } = statistics;
-      console.log(data);
-      setStatisticsState(data);
-      // console.log()
-    }
-    if (statisticsError) {
-      console.log("err");
-    }
-  }, [statisticsError, statisticsIsSuccess]);
-
-  useEffect(() => {
-    if (subscriptionIsSuccess) {
-      const { data } = subscriptionData;
-      console.log(data);
-      setSubscriptionState(data);
-      // console.log()
-    }
-    if (subscriptionError) {
-      console.log("err");
-    }
-  }, [subscriptionError, subscriptionIsSuccess, subscriptionData]);
-
-
-  useEffect(() => {
-    if (subscriptionsIsSuccess) {
-      const { data } = subscriptionsData;
-      console.log(data);
-      setSubscriptionsState(data);
-      // console.log()
-    }
-    if (subscriptionsError) {
-      console.log("err");
-    }
-  }, [subscriptionsError, subscriptionsIsSuccess]);
+  }, [giverIsError, giverIsSuccess]);
 
   const columns = [
-    "Caretakers names",
+    "Caregivers names",
     "Email address",
     "Phone number",
     "Zip-code",
     "Date joined",
+    "status"
   ];
   return (
     <>
@@ -150,14 +108,14 @@ const donations = () => {
           {!id ? (
             <Card>
               <CardHeader
-                title="All care receivers"
+                title="All care givers"
                 titleTypographyProps={{ variant: "h6" }}
               />
               <TableBasic
                 setValue={setId}
-                Head={"All carereceivers"}
+                Head={"All caregivers"}
                 columns={columns}
-                rows={receivers}
+                rows={givers}
               />
             </Card>
           ) : (
@@ -167,28 +125,30 @@ const donations = () => {
                   <ListItemAvatar>
                     <Avatar
                       alt={`Avatar n°`}
-                      src={receiver?.profile_photo_url}
+                      src={giver?.profile_photo_url}
                     />
                   </ListItemAvatar>
                   <Box>
-                    <ListItemText primary={receiver?.name} />
-                    <ListItemText primary={receiver?.date_joined} />
+                    <ListItemText primary={giver?.name} />
+                    <ListItemText primary={giver?.date_joined} />
                   </Box>
                 </Box>
-                {receiver && (
+                {
+                giver && (
                   <List>
-                    <CustomListItem left={"Email"} right={receiver?.email} />
-                    <CustomListItem left={"Phone"} right={receiver?.phone} />
-                    <CustomListItem left={"Zip Code"} right={receiver?.email} />
+                    <CustomListItem left={"Email"} right={giver?.email} />
+                    <CustomListItem left={"Phone"} right={giver?.phone} />
+                    <CustomListItem left={"Zip Code"} right={giver?.zip_code} />
                     {/* <CustomListItem left={'Email'} right={receiver.email}/> */}
                   </List>
-                )}
+                )
+                }
 
                 {
                   <List
                     sx={{ borderTop: "1px solid #DFE0EB", marginTop: "1.6em" }}
                   >
-                    <Typography variant="h6" fontWeight={600} py="0.85em">
+                    {/* <Typography variant="h6" fontWeight={600} py="0.85em">
                       statistics
                     </Typography>
                     <CustomListItem
@@ -202,7 +162,7 @@ const donations = () => {
                     <CustomListItem
                       left={"Completed"}
                       right={statisticsState?.total_completed_jobs}
-                    />
+                    /> */}
                   </List>
                 }
               </Grid>
@@ -248,5 +208,5 @@ const donations = () => {
     </>
   );
 };
-donations.PageLayout = FullLayout;
+donations.PageLayout = AgencyLayout;
 export default donations;

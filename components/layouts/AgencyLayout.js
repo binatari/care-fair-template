@@ -7,9 +7,9 @@ import {
 } from "@mui/material";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
-import Menuitems from "./sidebar/MenuItems";
 import Footer from "./footer/Footer";
 import {useRouter} from 'next/router'
+import AgencyItems from "./sidebar/AgencyItems";
 
 const MainWrapper = experimentalStyled("div")(() => ({
   display: "flex",
@@ -32,7 +32,7 @@ const PageWrapper = experimentalStyled("div")(({ theme }) => ({
   },
 }));
 
-const FullLayout = ({ children }) => {
+const AgencyLayout = ({ children }) => {
   
   const [isSidebarOpen, setSidebarOpen] = React.useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = React.useState(false);
@@ -49,7 +49,7 @@ const FullLayout = ({ children }) => {
         isSidebarOpen={isSidebarOpen}
         isMobileSidebarOpen={isMobileSidebarOpen}
         onSidebarClose={() => setMobileSidebarOpen(false)}
-        Menuitems={Menuitems}
+        Menuitems={AgencyItems}
       />
       <PageWrapper>
         <Container
@@ -67,4 +67,4 @@ const FullLayout = ({ children }) => {
   );
 };
 
-export default FullLayout;
+export default AgencyLayout;

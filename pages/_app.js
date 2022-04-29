@@ -20,8 +20,7 @@ const queryClientConfig = {
   defaultOptions: {
     queries: {
       retry: 3, 
-      staleTime: Infinity,
-      cacheTime: Infinity,
+      // staleTime: Infinity,
       refetchOnMount: true,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false

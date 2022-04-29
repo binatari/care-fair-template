@@ -31,7 +31,7 @@ import {
   onGetReceiverStatistics,
   onGetReceiverSubscription,
   onGetReceiverSubscriptions,
-} from "../../src/utils/queries";
+} from "../../src/utils/adminQueries";
 import CustomListItem from "../../components/CustomListItem";
 import { SetMealSharp } from "@mui/icons-material";
 import InfoPanel from "../../components/InfoPanel";
@@ -136,7 +136,7 @@ const donations = () => {
           {!id ? (
             <Card>
               <CardHeader
-                title="Basic Table"
+                title="All care givers"
                 titleTypographyProps={{ variant: "h6" }}
               />
               <TableBasic

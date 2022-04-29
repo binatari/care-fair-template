@@ -20,14 +20,14 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
 import React from "react";
-import { useAuthProvider } from "../../context/AuthProvider";
+import { useAuthProvider } from "../../../context/AuthProvider";
 import { useForm, Controller } from "react-hook-form";
 import { parseCookies, setCookie, destroyCookie } from 'nookies'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 // import HelperText from "../../components/HelperText";
-import { getCookie, onLogin, onRegister } from "../../src/utils/queries";
-import { useLoginProvider } from "../../context/LoginProvider";
+import { getCookie, onLogin, onRegister } from "../../../src/utils/adminQueries";
+import { useLoginProvider } from "../../../context/LoginProvider";
 import { useRouter } from "next/router";
 
 const schema = yup.object({

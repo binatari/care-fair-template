@@ -15,10 +15,10 @@ import {
   ListItemText,
 } from "@mui/material";
 import LogoIcon from "../../logo/LogoIcon";
-import Menuitems from "./MenuItems";
+
 import { useRouter } from "next/router";
 
-const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
+const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen, Menuitems }) => {
   const [open, setOpen] = React.useState(true);
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
@@ -45,6 +45,8 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
               <NextLink href={item.href}>
                 <ListItem
                   onClick={() => handleClick(index)}
+              
+                  disabled={item.disabled === true}
                   button
                   selected={location === item.href}
                   sx={{
@@ -124,6 +126,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
           width: "265px",
           border: "0 !important",
           flexShrink: 0,
+          bgcolor: "primary.main",
         },
       }}
       variant="temporary"
