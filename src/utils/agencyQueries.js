@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "react-query";
 
 
 export const agency = axios.create({
-    baseURL:process.env.NEXT_PUBLIC_BASE_URL,
+    baseURL:process.env.BASE_URL,
     headers:{
         'Content-Type':'application/json',
         accept:'application/json',
