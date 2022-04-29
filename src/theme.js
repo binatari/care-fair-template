@@ -99,7 +99,7 @@ lineHeight: "20px",
         indicator: {
           // Some CSS
         backgroundColor:'#4136F1',
-        maxWidth:'1.5em'
+        maxWidth:'2em'
         },
       },
     },
@@ -114,7 +114,8 @@ lineHeight: "20px",
           // Some CSS
         padding:0,
         alignItems:"flex-start",
-        textAlign:"left"
+        textAlign:"left",
+        marginRight:'0.8em'
         },
 
       },

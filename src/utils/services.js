@@ -1,8 +1,18 @@
-export default function authHeader() {
+export function getToken() {
     const token = localStorage.getItem('token');
     if (token) {
-      return { Authorization: 'Bearer ' + token };
+      return { token };
     } else {
-      return {};
+      return null;
+    }
+  }
+
+
+  export function getAgencyToken() {
+    const token = localStorage.getItem('agencyToken');
+    if (token) {
+      return { token };
+    } else {
+      return null;
     }
   }

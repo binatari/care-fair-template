@@ -7,7 +7,7 @@ import { CacheProvider } from '@emotion/react';
 import theme from '../src/theme';
 import '../src/css/Global.css'
 import createEmotionCache from '../src/createEmotionCache';
-
+import PrivateRoute from '../components/Protected/ProtectedRoute';
 import {
   useQueryClient,
   QueryClient,
@@ -35,7 +35,7 @@ const clientSideEmotionCache = createEmotionCache();
 
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-
+const publicRoutes = ['/admin/login', '/agency/login', '/admin/register']
   return (
     <CacheProvider value={emotionCache}>
       <QueryClientProvider client={queryClient}>
@@ -46,6 +46,7 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
+        <PrivateRoute publicRoutes={publicRoutes}>
         { Component.PageLayout ? 
         <Component.PageLayout>
           <Component {...pageProps} />
@@ -55,6 +56,7 @@ export default function MyApp(props) {
         <Component {...pageProps} />
         </AuthLayout>
         }
+        </PrivateRoute>
       </ThemeProvider>
       </LoginContextProvider>
      </QueryClientProvider>

@@ -1,5 +1,6 @@
 import React from "react";
 import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 import PropTypes from "prop-types";
 // Dropdown Component
 import SearchDD from "./SearchDD";
@@ -18,12 +19,9 @@ const Header = ({ sx, customClass, toggleMobileSidebar, position }) => {
   return (
     <AppBar sx={sx} position={position} elevation={0} className={customClass}>
       <Toolbar>
-        <Typography variant="h5" sx={{color:'black', fontWeight:'700'}}>
-          {pathFormat(pageName)}
-        </Typography>
-        <IconButton
+      <IconButton
           size="large"
-          color="inherit"
+          // color="inherit"
           aria-label="menu"
           onClick={toggleMobileSidebar}
           sx={{
@@ -33,8 +31,16 @@ const Header = ({ sx, customClass, toggleMobileSidebar, position }) => {
             },
           }}
         >
+          <i class="las la-bars la-lg"></i>
           {/*put button here*/}
         </IconButton>
+        <Typography variant="h5" sx={{color:'black', fontWeight:'700', display: {
+              lg: "flex",
+              xs: "none",
+            },}}>
+          {pathFormat(pageName)}
+        </Typography>
+       
         {/* ------------------------------------------- */}
         {/* Search Dropdown */}
         {/* ------------------------------------------- */}

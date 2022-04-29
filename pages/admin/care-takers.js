@@ -10,6 +10,7 @@ import TableBasic from "../../components/Table";
 import {
   Avatar,
   Box,
+  Button,
   List,
   ListItem,
   ListItemAvatar,
@@ -23,17 +24,11 @@ import TabPanel from "@mui/lab/TabPanel";
 import Tabs from "../../components/Tabs";
 import {
   onGetAllGivers,
-  onGetAllReceivers,
   onGetGiverSubscription,
   onGetGiverSubscriptions,
   onGetParticularGiver,
-  onGetParticularReceiver,
-  onGetReceiverStatistics,
-  onGetReceiverSubscription,
-  onGetReceiverSubscriptions,
 } from "../../src/utils/adminQueries";
 import CustomListItem from "../../components/CustomListItem";
-import { SetMealSharp } from "@mui/icons-material";
 import InfoPanel from "../../components/InfoPanel";
 import InfoCard from "../../components/InfoCard";
 const donations = () => {
@@ -68,7 +63,6 @@ const donations = () => {
     isError: subscriptionsError,
     isSuccess: subscriptionsIsSuccess,
   } = onGetGiverSubscriptions(id);
-
 
   const handleChange = (e, newValue) => {
     setValue(newValue);
@@ -108,7 +102,6 @@ const donations = () => {
       console.log("err");
     }
   }, [subscriptionError, subscriptionIsSuccess]);
-
 
   useEffect(() => {
     if (subscriptionsIsSuccess) {
@@ -151,26 +144,51 @@ const donations = () => {
               <Grid item xs={12} md={4}>
                 <Box display="flex">
                   <ListItemAvatar>
-                    <Avatar
-                      alt={`Avatar n°`}
-                      src={giver?.profile_photo_url}
-                    />
+                    <Avatar alt={`Avatar n°`} src={giver?.profile_photo_url} />
                   </ListItemAvatar>
                   <Box>
                     <ListItemText primary={giver?.name} />
                     <ListItemText primary={giver?.date_joined} />
                   </Box>
                 </Box>
-                {
-                giver && (
+                <Box display="flex">
+                  <Button
+                    sx={{
+                      textTransform: "none",
+                      backgroundColor:'primary.blue',
+                      mr:'0.5em'
+                    }}
+                    variant="contained"
+                    // color="primary"
+                    disableElevation
+                    disableFocusRipple
+                    disableRipple
+                  >
+                    Accept in
+                  </Button>
+                  <Button
+                    sx={{
+                      textTransform: "none",
+                      backgroundColor:'rgba(65, 54, 241, 0.1)',
+                      color:'primary.blue'
+                    }}
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    disableFocusRipple
+                    disableRipple
+                  >
+                    Decline
+                  </Button>
+                </Box>
+                {giver && (
                   <List>
                     <CustomListItem left={"Email"} right={giver?.email} />
                     <CustomListItem left={"Phone"} right={giver?.phone} />
                     <CustomListItem left={"Zip Code"} right={giver?.zip_code} />
                     {/* <CustomListItem left={'Email'} right={receiver.email}/> */}
                   </List>
-                )
-                }
+                )}
 
                 {
                   <List
@@ -210,6 +228,7 @@ const donations = () => {
                 </>
               ))} */}
                           <Tab label={"Subscription"} value={"1"} />
+                          <Tab label={"Verification"} value={"2"} />
                           {/* <Tab label={'Checkins'} value={'1'} /> */}
                         </TabList>
                       </Box>
@@ -221,7 +240,26 @@ const donations = () => {
           ))
         } */}
                       <TabPanel value="1">
-                        <InfoPanel head={<InfoCard date={subscriptionState?.ends_at} text={subscriptionState?.plan?.name}/>} items={subscriptionsState} />
+                        <InfoPanel
+                          head={
+                            <InfoCard
+                              date={subscriptionState?.ends_at}
+                              text={subscriptionState?.plan?.name}
+                            />
+                          }
+                          items={subscriptionsState}
+                        />
+                      </TabPanel>
+                      <TabPanel value="2">
+                        <InfoPanel
+                          head={
+                            <InfoCard
+                              date={subscriptionState?.ends_at}
+                              text={subscriptionState?.plan?.name}
+                            />
+                          }
+                          items={subscriptionsState}
+                        />
                       </TabPanel>
                       {/* <TabPanel value="2">Item Two</TabPanel>
         <TabPanel value="3">Item Three</TabPanel> */}
