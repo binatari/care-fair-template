@@ -93,6 +93,35 @@ lineHeight: "20px",
         },
       },
     },
+    MuiTabs:{
+      styleOverrides: {
+        // Name of the slot
+        indicator: {
+          // Some CSS
+        backgroundColor:'#4136F1',
+        maxWidth:'1.5em'
+        },
+      },
+    },
+
+    MuiTab:{
+      styleOverrides: {
+        // Name of the slot
+        root: {
+          "&.Mui-selected": {
+            "color": "#4136F1"
+          },
+          // Some CSS
+        padding:0,
+        alignItems:"flex-start",
+        textAlign:"left"
+        },
+
+      },
+    }
+    ,
+
+
     MuiTextField:{
       styleOverrides: {
         // Name of the slot

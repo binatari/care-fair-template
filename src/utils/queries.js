@@ -3,12 +3,15 @@ import authHeader from "./services";
 import { useMutation, useQuery } from "react-query";
 
 export const api = axios.create({
-    baseURL:'https://api.thecarefair.com/api/v1/',
+    baseURL:process.env.NEXT_PUBLIC_BASE_URL,
     headers:{
         'Content-Type':'application/json',
-        accept:'application/json'
+        accept:'application/json',
+        // "Access-Control-Allow-Origin": "http://localhost:3000"
     }
 })
+
+api.defaults.withCredentials=true
 
 api.interceptors.request.use(function (config) {
     const token = localStorage.getItem('token');
@@ -17,123 +20,186 @@ api.interceptors.request.use(function (config) {
 });
 
 
-export const subscribe = ({finalResponse, token}) => {
-    console.log(finalResponse, token)
-    return api.patch('/donees/onboard', {...finalResponse, country_id:'bf82fef9-1dfb-4a0f-8132-2c74801d39ee'},)
-}
 
-export const getDonations = () => {
-    return api.get('/donations',)
-}
-
-export const getDonationsSummary = () => {
-    return api.get('/donations/summary',)
-}
 
 export const register = (data) => {
     return api.post('/donees', data)
 }
 
 
-export const getUser = (data) => {
-    return api.get('/auth/user')
-}
 
+export const getCookie = () => {
+    return axios.get('https://api.thecarefair.com/sanctum/csrf-cookie',
+    {
+    //    'Access-Control-Allow-Credentials':true,
+       withCredentials:true
+    } 
+    )
+    .then(response => {
+       console.log(response.headers);
+    }).catch((err)=>console.log(err))
+}
 
 export const login = (data) => {
-    return api.post('/admin/auth/login', {...data, _token: "{{ csrf_token() }}"})
+    return api.post('admin/auth/login', data,
+    // {
+    //     withCredentials:true
+    // } 
+    )
+    // .then(response => {
+    //    console.log(response.headers);
+    // })
 }
 
-
-export const verify = ({token, form}) => {
-    return api.post('/auth/verify/email', {otp:form},)
-}
-
-export const sendOtp= (data) => {
-    console.log(data)
-    return api.post('/auth/password/forgot', data)
-}
-
-
-export const checkOtp= (data) => {
-    return api.patch('/auth/password/validate-otp', data)
-}
-
-export const getDonationTypes = (token) => {
-    return api.get('/donation-types',)
-}
-
-export const getDonationType = (token, id) => {
-    return api.get(`/donation-types/${id}`,)
-}
-
-
-export const getDonors = () => {
-    return api.get(`/donors`,)
-}
-
-
-export const getDonorsSummary = () => {
-    return api.get(`/donors/summary`,)
-}
-
-
-//donations page
-export const onGetDonations = (token) =>{
-    return useQuery('getDonations', ()=>getDonations(token))
-}
-
-export const onGetDonationsSummary = (token) =>{
-    return useQuery('getDonationsSummary', ()=>getDonationsSummary(token))
-}
-
-//donations types page
-export const onGetDonationTypes = (token) =>{
-    return useQuery('getDonationTypes', ()=>getDonationTypes(token))
-}
-
-
-export const onGetDonationType = (token, id) =>{
-    return useQuery('getDonationType', ()=>getDonationType(token, id))
-}
-
-
-export const onGetUser = (token) =>{
-    return useQuery('getUser', ()=>getUser(token))
-}
-
-export const onGetDonors = () =>{
-    return useQuery('getDonors', getDonors)
-}
-
-export const onGetDonorsSummary = () =>{
-    return useQuery('getDonorsSummary', getDonorsSummary)
-}
-
-
-export const onBoard = () =>{
-    return useMutation(subscribe)
-}
-
-export const onRegister = () =>{
-    return useMutation(register)
-}
 
 export const onLogin = () =>{
     return useMutation(login)
 }
 
-export const onVerify = () =>{
-    return useMutation(verify)
-}
 
-export const requestOtp = () =>{
-    return useMutation(sendOtp)
-}
-
-export const validateOtp = () =>{
-    return useMutation(checkOtp)
+export const statisticsOverview = (data) => {
+    return api.get('admin/dashboard/statistics',).then(res=>res.data).catch((err)=>err)
+  
 }
 
 
+export const recentGivers = () => {
+    return api.get('/givers/list?recent=5').then(res=>res.data).catch((err)=>err)
+  
+}
+
+export const recentReceivers = () => {
+    return api.get('admin/receivers/list?recent=5').then(res=>res.data).catch((err)=>err)
+  
+}
+
+export const recentAgencies = () => {
+    return api.get('admin/agencies/list').then(res=>res.data).catch((err)=>err)
+  
+}
+
+export const activityTimeline = () => {
+    return api.get('admin/dashboard/activities').then(res=>res.data).catch((err)=>err)
+  
+}
+
+export const allReceivers = () => {
+    return api.get('admin/receivers/list').then(res=>res.data).catch((err)=>err)
+}
+
+export const particularReceiver = (id) => {
+    return api.get(`admin/receivers/show/${id}/profile`).then(res=>res.data).catch((err)=>err)
+}
+
+export const receiverStatistics = (id) => {
+    return api.get(`admin/receivers/show/${id}/summary`).then(res=>res.data).catch((err)=>err)
+}
+
+export const receiverSubscription = (id) => {
+    return api.get(`admin/receivers/show/${id}/subscriptions/current`).then(res=>res.data).catch((err)=>err)
+}
+export const receiverSubscriptions = (id) => {
+    return api.get(`admin/receivers/show/${id}/subscriptions/history`).then(res=>res.data).catch((err)=>err)
+}
+
+
+export const allGivers = () => {
+    return api.get('admin/givers/list').then(res=>res.data).catch((err)=>err)
+}
+
+export const particularGiver = (id) => {
+    return api.get(`admin/givers/show/${id}/profile`).then(res=>res.data).catch((err)=>err)
+}
+
+// export const receiverStatistics = (id) => {
+//     return api.get(`admin/receivers/show/${id}/summary`).then(res=>res.data).catch((err)=>err)
+// }
+
+export const giverSubscription = (id) => {
+    return api.get(`admin/givers/show/${id}/subscriptions/current`).then(res=>res.data).catch((err)=>err)
+}
+export const giverSubscriptions = (id) => {
+    return api.get(`admin/givers/show/${id}/subscriptions/history`).then(res=>res.data).catch((err)=>err)
+}
+
+export const onGetStatisticsOverview = () => {
+    return useQuery("statisticsOverview", statisticsOverview);
+  };
+
+  export const onGetRecentGivers = () => {
+    return useQuery("recentGivers", recentGivers);
+  };
+
+  export const onGetRecentReceivers = () => {
+    return useQuery("recentReceivers", recentReceivers);
+  };
+
+  export const onGetRecentAgencies = () => {
+    return useQuery("recentAgencies", recentAgencies);
+  };
+
+  export const onGetActivityTimeline = () => {
+    return useQuery("activityTimeline",activityTimeline);
+  };
+
+  export const onGetAllReceivers = () => {
+    return useQuery("allReceivers",allReceivers);
+  };
+
+  export const onGetParticularReceiver = (id) => {
+    return useQuery(["particularReceiver", id],()=>particularReceiver(id), {
+        enabled:!!id
+    });
+  };
+
+  export const onGetReceiverStatistics = (id) => {
+    return useQuery("receiverStatistics",()=>receiverStatistics(id),{
+        enabled:!!id
+    });
+  };
+
+
+  export const onGetReceiverSubscriptions = (id) => {
+    return useQuery("receiverSubscriptions",()=>receiverSubscriptions(id),{
+        enabled:!!id
+    });
+  };
+
+  export const onGetReceiverSubscription = (id) => {
+    return useQuery("receiverSubscription",()=>receiverSubscription(id),{
+        enabled:!!id
+    });
+  };
+
+
+  export const onGetAllGivers = () => {
+    return useQuery("allGivers",allGivers);
+  };
+
+  export const onGetParticularGiver = (id) => {
+    return useQuery(["particularGiver", id],()=>particularGiver(id), {
+        enabled:!!id
+    });
+  };
+
+//   export const onGetGiverStatistics = (id) => {
+//     return useQuery("receiverStatistics",()=>giverStatistics(id),{
+//         enabled:!!id
+//     });
+//   };
+
+
+  export const onGetGiverSubscription = (id) => {
+    return useQuery("giversSubscriptions",()=>giverSubscription(id),{
+        enabled:!!id
+    });
+  };
+
+  export const onGetGiverSubscriptions = (id) => {
+    return useQuery("giversSubscription",()=>giverSubscriptions(id),{
+        enabled:!!id
+    });
+  };
+
+  
 

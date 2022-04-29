@@ -1,28 +1,27 @@
-import { Box, ListItem, Typography } from "@mui/material";
+import { Box, ListItem, ListItemText, Typography } from "@mui/material";
 import React from "react";
 
-const CustomListItem = ({error=false, success=false, processing=false, index, rightText='', leftText='', clarified=false, big}) => {
+const CustomListItem = ({left, right}) => {
   return (
     <ListItem
+      dense
       sx={{
-        borderBottom: "1px solid",
-        borderColor: "grey.border40",
+        border: "1px solid #DFE0EB",
+        borderRadius: "8px",
+        py: "1.5em",
+        px: "1.25em",
+        mt:'0.65em',
         display: "flex",
         justifyContent: "space-between",
       }}
     >
-      <Typography variant={'big'}>
-          {leftText}
-      </Typography>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <ListItemText primary={left && left} />
+      </Box>
       <Box>
-        
-     { error && <i class={'las la-times-circle'} style={{color:"red"}}></i>}
-     { success && <i class={'las la-check-circle'} style={{color:"blue"}}></i>}
-     { processing && <i class="las la-ellipsis-h" style={{color:'orange'}}></i>}
-     { clarified && <i class="las la-check" style={{color:"green"}}></i>}
-      <Typography variant={big ?'h4':'big'}>
-          {rightText}
-      </Typography>
+        <Typography variant={"small"} fontSize="14px">
+          {right && right}
+        </Typography>
       </Box>
     </ListItem>
   );
