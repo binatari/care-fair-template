@@ -1,7 +1,7 @@
 import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
 import React from "react";
 import InfoCard from "./InfoCard";
-
+import moment from "moment";
 const InfoPanel = ({ head, items}) => {
   return (
     <>
@@ -24,7 +24,7 @@ const InfoPanel = ({ head, items}) => {
               </Box>
               <Box>
                 <Typography variant={"small"} fontSize="14px">
-                 {item.ends_at}
+                 {moment(item.ends_at).format("[joined] MMM Do YY")}
                 </Typography>
               </Box>
               <Box>

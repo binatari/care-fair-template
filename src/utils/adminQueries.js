@@ -201,5 +201,19 @@ export const onGetStatisticsOverview = () => {
     });
   };
 
-  
 
+  export const verifyGiver = (data) => {
+    return api.post('admin/givers/verify', data).then(res=>res.data).catch((err)=>err)
+}
+
+export const verifyDocument = (data) => {
+  return api.post('admin/givers/documents/verify', data).then(res=>res.data).catch((err)=>err)
+}
+  
+export const onVerifyDocument = () =>{
+  return useMutation(verifyDocument)
+}
+
+export const onVerifyGiver = () =>{
+  return useMutation(verifyGiver)
+}

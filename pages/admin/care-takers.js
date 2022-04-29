@@ -27,10 +27,14 @@ import {
   onGetGiverSubscription,
   onGetGiverSubscriptions,
   onGetParticularGiver,
+  onVerifyDocument,
+  onVerifyGiver
 } from "../../src/utils/adminQueries";
 import CustomListItem from "../../components/CustomListItem";
 import InfoPanel from "../../components/InfoPanel";
 import InfoCard from "../../components/InfoCard";
+import moment from "moment";
+import DocumentSearch from "../../components/DocumentSearch";
 const donations = () => {
   const [view, setView] = useState(false);
   const [givers, setGivers] = useState(null);
@@ -51,6 +55,14 @@ const donations = () => {
     isError: giverIsError,
     isSuccess: giverIsSuccess,
   } = onGetParticularGiver(id);
+
+  const {
+    data: verifyGiverData,
+    isError: verifyGiverIsError,
+    isSuccess: verifyGiverIsSuccess,
+    mutate:verifyGiverMutate
+  } = onVerifyGiver();
+  
 
   const {
     data: subscriptionData,
@@ -115,6 +127,7 @@ const donations = () => {
     }
   }, [subscriptionsError, subscriptionsIsSuccess]);
 
+  console.log(giver)
   const columns = [
     "Caretakers names",
     "Email address",
@@ -148,11 +161,14 @@ const donations = () => {
                   </ListItemAvatar>
                   <Box>
                     <ListItemText primary={giver?.name} />
-                    <ListItemText primary={giver?.date_joined} />
+                    <ListItemText sx={{fontSize:'14px'}} primary={moment(giver?.date_joined).format("MMM Do YY")} />
                   </Box>
                 </Box>
                 <Box display="flex">
                   <Button
+                   onClick={()=>{
+                     verifyGiverMutate({giver_id:id,status:'verified'})
+                   }}
                     sx={{
                       textTransform: "none",
                       backgroundColor:'primary.blue',
@@ -167,6 +183,9 @@ const donations = () => {
                     Accept in
                   </Button>
                   <Button
+                    onClick={()=>{
+                      verifyGiverMutate({giver_id:id,status:'declined'})
+                    }}
                     sx={{
                       textTransform: "none",
                       backgroundColor:'rgba(65, 54, 241, 0.1)',
@@ -213,7 +232,7 @@ const donations = () => {
                 }
               </Grid>
               <Grid item xs={12} md={8} component="Paper">
-                <Paper sx={{ p: "3em" }}>
+                <Paper sx={{ p:{xs:'',md: "3em" }}}>
                   <Box sx={{ width: "100%", typography: "body1" }}>
                     <TabContext value={value}>
                       <Box>
@@ -251,15 +270,7 @@ const donations = () => {
                         />
                       </TabPanel>
                       <TabPanel value="2">
-                        <InfoPanel
-                          head={
-                            <InfoCard
-                              date={subscriptionState?.ends_at}
-                              text={subscriptionState?.plan?.name}
-                            />
-                          }
-                          items={subscriptionsState}
-                        />
+                        <DocumentSearch document={giver && giver}/>
                       </TabPanel>
                       {/* <TabPanel value="2">Item Two</TabPanel>
         <TabPanel value="3">Item Three</TabPanel> */}

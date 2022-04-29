@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import moment from "moment";
 import React from "react";
 
 const InfoCard = ({date, text}) => {
@@ -6,11 +7,14 @@ const InfoCard = ({date, text}) => {
     <Box
       sx={{
         backgroundColor: "#4136F1",
+        px:{
+          xs:"1em",
+          md:'4em'
+        }
       }}
       borderRadius={"0.5em"}
       pt="1em"
       pb="1.5em"
-      px="4em"
       border={"1px solid #DFE0EB"}
       height="100%"
       display={"flex"}
@@ -33,7 +37,7 @@ const InfoCard = ({date, text}) => {
           color={"grey.dark"}
           mb="1em"
         >
-          {date && date}
+          {date && moment(date).format("[joined] MMM Do YY")}
         </Typography>
       </Box>
       <Typography variant="h4"  fontWeight={700}>
