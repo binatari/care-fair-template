@@ -98,7 +98,7 @@ lineHeight: "20px",
         // Name of the slot
         indicator: {
           // Some CSS
-        backgroundColor:'#4136F1',
+        backgroundColor:'#ed9c7f',
         maxWidth:'2em'
         },
       },
@@ -109,7 +109,7 @@ lineHeight: "20px",
         // Name of the slot
         root: {
           "&.Mui-selected": {
-            "color": "#4136F1"
+            "color": "#5f9ea0"
           },
           // Some CSS
         padding:0,
@@ -205,9 +205,9 @@ lineHeight: "20px",
 
   palette: {
     primary: {
-      blue:'#4136F1',
+      blue:'#ed9c7f',//is not actually blue
       green:'#9BFFE1',
-      main:'#1B2448',
+      main:'#5f9ea0',
       light:'#9FA2B4',
     },
     secondary: {

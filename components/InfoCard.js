@@ -6,7 +6,7 @@ const InfoCard = ({date, text}) => {
   return (
     <Box
       sx={{
-        backgroundColor: "#4136F1",
+        backgroundColor: "primary.main",
         px:{
           xs:"1em",
           md:'4em'

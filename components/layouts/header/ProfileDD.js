@@ -69,7 +69,7 @@ const ProfileDD = () => {
           </Box>
           <Divider />
           <Box p={2}>
-            <Link to="/" onClick={()=>localStorage.removeItem('agencyToken')}>
+            <Link href="/" onClick={()=>localStorage.removeItem('agencyToken')}>
               <Button fullWidth variant="contained" color="primary">
                 Logout
               </Button>

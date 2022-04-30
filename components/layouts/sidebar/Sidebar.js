@@ -52,9 +52,9 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen, Menuitems
                   sx={{
                     // mb: 1,
                     ...(location === item.href && {
-                      color: "primary.main",
-                      backgroundColor: (theme) =>
-                        `${theme.palette.primary.light}!important`,
+                      color: (theme) =>
+                      `2px solid ${theme.palette.primary.main} !important`,
+                      backgroundColor: 'white !important',
                       borderLeft: (theme) =>
                         `2px solid ${theme.palette.grey.main}`,
                     }),
@@ -72,7 +72,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen, Menuitems
                     <i
                       class={item.icon}
                       style={{
-                        color: `${location === item.href ? "blue" : ""}`,
+                        color: `${location === item.href ? "#5f9ea0" : "white"}`,
                       }}
                     ></i>
                   </ListItemIcon>
@@ -80,7 +80,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen, Menuitems
                   <ListItemText
                     disableTypography
                     primary={
-                      <Typography variant="big" sx={{ color: `${location === item.href ? "grey.main" : "grey.light"}`}}>
+                      <Typography variant="big" sx={{ color: `${location === item.href ? "primary.main" : "white"}`}}>
                        {item.title}
                       </Typography>
                     }
