@@ -205,9 +205,9 @@ lineHeight: "20px",
 
   palette: {
     primary: {
-      blue:'#4136F1',
+      blue:'#06FEA0',
       green:'#9BFFE1',
-      main:'#1B2448',
+      main:'#5F9AE0',
       light:'#9FA2B4',
     },
     secondary: {

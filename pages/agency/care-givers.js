@@ -15,6 +15,7 @@ import {
   ListItemAvatar,
   ListItemText,
   Paper,
+  Rating,
   Tab,
 } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
@@ -26,19 +27,19 @@ import {
   onGetGiverSubscription,
   onGetGiverSubscriptions,
   onGetParticularGiver,
- 
 } from "../../src/utils/agencyQueries";
 import CustomListItem from "../../components/CustomListItem";
 import InfoPanel from "../../components/InfoPanel";
 import InfoCard from "../../components/InfoCard";
 import AgencyLayout from "../../components/layouts/AgencyLayout";
+import DocumentSearch from "../../components/DocumentSearch";
 const donations = () => {
   const [view, setView] = useState(false);
   const [givers, setGivers] = useState(null);
   const [giver, setGiver] = useState(null);
-//   const [statisticsState, setStatisticsState] = useState(null);
-//   const [subscriptionState, setSubscriptionState] = useState(null);
-//   const [subscriptionsState, setSubscriptionsState] = useState(null);
+  //   const [statisticsState, setStatisticsState] = useState(null);
+  //   const [subscriptionState, setSubscriptionState] = useState(null);
+  //   const [subscriptionsState, setSubscriptionsState] = useState(null);
   const [id, setId] = useState("");
   const [value, setValue] = React.useState("1");
 
@@ -53,18 +54,17 @@ const donations = () => {
     isSuccess: giverIsSuccess,
   } = onGetParticularGiver(id);
 
-//   const {
-//     data: subscriptionData,
-//     isError: subscriptionError,
-//     isSuccess: subscriptionIsSuccess,
-//   } = onGetGiverSubscription(id);
+  //   const {
+  //     data: subscriptionData,
+  //     isError: subscriptionError,
+  //     isSuccess: subscriptionIsSuccess,
+  //   } = onGetGiverSubscription(id);
 
-//   const {
-//     data: subscriptionsData,
-//     isError: subscriptionsError,
-//     isSuccess: subscriptionsIsSuccess,
-//   } = onGetGiverSubscriptions(id);
-
+  //   const {
+  //     data: subscriptionsData,
+  //     isError: subscriptionsError,
+  //     isSuccess: subscriptionsIsSuccess,
+  //   } = onGetGiverSubscriptions(id);
 
   const handleChange = (e, newValue) => {
     setValue(newValue);
@@ -99,7 +99,7 @@ const donations = () => {
     "Phone number",
     "Zip-code",
     "Date joined",
-    "status"
+    "status",
   ];
   return (
     <>
@@ -123,26 +123,21 @@ const donations = () => {
               <Grid item xs={12} md={4}>
                 <Box display="flex">
                   <ListItemAvatar>
-                    <Avatar
-                      alt={`Avatar n°`}
-                      src={giver?.profile_photo_url}
-                    />
+                    <Avatar alt={`Avatar n°`} src={giver?.profile_photo_url} />
                   </ListItemAvatar>
                   <Box>
                     <ListItemText primary={giver?.name} />
-                    <ListItemText primary={giver?.date_joined} />
+                    <Rating name="read-only" value={giver?.rating} readOnly />
                   </Box>
                 </Box>
-                {
-                giver && (
+                {giver && (
                   <List>
                     <CustomListItem left={"Email"} right={giver?.email} />
                     <CustomListItem left={"Phone"} right={giver?.phone} />
                     <CustomListItem left={"Zip Code"} right={giver?.zip_code} />
                     {/* <CustomListItem left={'Email'} right={receiver.email}/> */}
                   </List>
-                )
-                }
+                )}
 
                 {
                   <List
@@ -181,9 +176,9 @@ const donations = () => {
                   <Tab label={`${tabRow.name}`} value={`${i}`} />
                 </>
               ))} */}
-                          <Tab label={"Subscription"} value={"1"} />
-                          {/* <Tab label={'Checkins'} value={'1'} /> */}
+                          <Tab label={"Verification requirements"} value={"1"} />
                         </TabList>
+                        
                       </Box>
                       {/* {
           tabRows&& tabRows.map((tabRow)=>(
@@ -193,10 +188,8 @@ const donations = () => {
           ))
         } */}
                       <TabPanel value="1">
-                        <InfoPanel head={<InfoCard date={subscriptionState?.ends_at} text={subscriptionState?.plan?.name}/>} items={subscriptionsState} />
+                        <DocumentSearch document={giver && giver} />
                       </TabPanel>
-                      {/* <TabPanel value="2">Item Two</TabPanel>
-        <TabPanel value="3">Item Three</TabPanel> */}
                     </TabContext>
                   </Box>
                 </Paper>

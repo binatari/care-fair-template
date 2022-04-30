@@ -12,8 +12,14 @@ const Header = ({ sx, customClass, toggleMobileSidebar, position }) => {
   const pageName = router.pathname
 
   const pathFormat = (str) =>{
+    let removePath
     const nameFormat = str.replace('-', ' ')
-    const removePath = nameFormat.replace('/admin/', '')
+
+    if(nameFormat.includes('/admin')){
+      removePath = nameFormat.replace('/admin/', '')
+      return removePath
+    }
+    removePath = nameFormat.replace('/agency/', '')
     return removePath
   }
   return (
