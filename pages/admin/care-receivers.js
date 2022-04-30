@@ -207,7 +207,7 @@ const donations = () => {
                 }
               </Grid>
               <Grid item xs={12} md={8} component="Paper">
-                <Paper sx={{ p: "3em" }}>
+                <Paper sx={{p:{xs:'',md: "3em" }}}>
                   <Box sx={{ width: "100%", typography: "body1" }}>
                     <TabContext value={value}>
                       <Box>
